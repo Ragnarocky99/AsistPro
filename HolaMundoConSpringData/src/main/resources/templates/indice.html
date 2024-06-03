@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <div th:if="${individuos != null and !individuos.empty}">
+        <table border = "1">
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Edad</th>
+                <th>Correo</th>
+                <th>Telefono</th>
+            </tr>
+            <tr th:each="i : ${individuos}">
+                <td th:text="${i.nombre}">Muestra nombre</td>
+                <td th:text="${i.apellido}">Muestra apellido</td>
+                <td th:text="${i.edad}">Muestra edad</td>
+                <td th:text="${i.correo}">Muestra correo</td>
+                <td th:text="${i.telefono}">Muestra telefono</td>
+            </tr>
+        </table>
+    </div>
+    <div th:if="${individuos == null or individuos.empty}">
+        <p>La lista no tiene un culo</p>
+    </div>
+    </body>
+</html>
