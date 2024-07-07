@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Formulario de Individuo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/style.css/}"/>
+</head>
+<body>
+    <header th:replace="plantilla/plantilla :: encabezado"/>
+    <main>
+        <h1 th:text="${individuo == null} ? 'Agregar Nuevo Individuo' : 'Editar Individuo'"></h1>
+        <form th:action="@{/guardarIndividuo}" th:object="${individuo}" method="post">
+            <input type="hidden" name="idindividuo" th:field="*{idindividuo}">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" th:field="*{nombre}">
+                <span th:if="${#fields.hasErrors('nombre')}" th:errores="*{nombre}">El nombre no puede estar vacio</span>
+            <label for="apellido">Apellido:</label>
+            <input type="text" id="apellido" th:field="*{apellido}" >
+                <span th:if="${#fields.hasErrors('apellido')}" th:errores="*{apellido}">El apellido no puede estar vacio</span>
+
+            <label for="edad">Edad:</label>
+            <input type="number" id="edad" th:field="*{edad}" >
+                <span th:if="${#fields.hasErrors('edad')}" th:errores="*{edad}">La edad no puede ser la seleccionada</span>
+
+            <label for="correo">Correo:</label>
+            <input type="text" id="correo" th:field="*{correo}" >
+                <span th:if="${#fields.hasErrors('correo')}" th:errores="*{correo}">Error en el formato de correo electronico <br></span>
+
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" th:field="*{telefono}" >
+                <span th:if="${#fields.hasErrors('telefono')}" th:errores="*{telefono}">Error en telefono <br><br></span>
+
+            <button type="submit" text="Guardar">Guardar</button>
+        </form>
+    </main>
+    <footer th:replace="plantilla/plantilla :: piedepagina"/>
+</body>
+</html>

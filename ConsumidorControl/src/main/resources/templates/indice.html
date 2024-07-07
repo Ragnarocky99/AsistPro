@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Individuos</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/style.css/}"/>
+</head>
+<body>
+    <header th:replace="plantilla/plantilla :: encabezado"/>
+    <main>
+        <h1>Lista de Individuos</h1>
+        <div class="search-container">
+            <form th:action="@{/buscarPorNombre}" method="get">
+                <input type="text" name="nombre" placeholder="Buscar por nombre..." />
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
+        <a href="/nuevoIndividuo" class="add-button">Agregar Nuevo Individuo</a>
+        <div th:if="${individuos != null and !individuos.empty}">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Edad</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="i : ${individuos}">
+                        <td th:text="${i.nombre}">Muestra nombre</td>
+                        <td th:text="${i.apellido}">Muestra apellido</td>
+                        <td th:text="${i.edad}">Muestra edad</td>
+                        <td th:text="${i.correo}">Muestra correo</td>
+                        <td th:text="${i.telefono}">Muestra teléfono</td>
+                        <td>
+                            <a th:href="@{/editarIndividuo/} + ${i.idindividuo}"class="edit-button">Editar</a>
+                            <a th:href="@{/eliminarIndividuo(idindividuo = ${i.idindividuo})}" class="delete-button">Eliminar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${individuos == null or individuos.empty}" class="no-data">
+            <p>La lista no contiene datos.</p>
+        </div>
+    </main>
+    <footer th:replace="plantilla/plantilla :: piedepagina"/>
+</body>
+</html>
