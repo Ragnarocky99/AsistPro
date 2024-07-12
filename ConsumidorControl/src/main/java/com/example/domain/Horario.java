@@ -7,27 +7,27 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.io.Serializable;
+import java.sql.Time;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "alumno")
-public class Alumno implements Serializable {
-    
-    private static final long serialVersionUID = 1L;
+@Table(name = "horario")
+public class Horario {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_alumno;
-    private String nombre;
-    private String apellido;
-    private String curso;
-    private String seccion;
-    private String cdi;
+    private int id_horario;
+    private int seccion;
+    private Time hora_inicio;
+    private Time hora_fin;
     @ManyToOne
     @JoinColumn(name = "id_especialidad")
     private Especialidad id_especialidad;
-    private String estado;
- 
+    @ManyToOne
+    @JoinColumn(name = "id_sala")
+    private Sala id_sala;
+    @ManyToOne
+    @JoinColumn(name = "id_profesor")  
+    private Profesor id_profesor;
 }

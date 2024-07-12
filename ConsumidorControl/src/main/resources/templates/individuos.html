@@ -8,26 +8,31 @@
     <header th:replace="plantilla/plantilla :: encabezado"/>
     <main>
     <h1>Resultados de la búsqueda</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Edad</th>
-                <th>Correo</th>
-                <th>Teléfono</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="individuo : ${individuos}">
-                <td th:text="${individuo.nombre}">Nombre</td>
-                <td th:text="${individuo.apellido}">Apellido</td>
-                <td th:text="${individuo.edad}">Edad</td>
-                <td th:text="${individuo.correo}">Correo</td>
-                <td th:text="${individuo.telefono}">Teléfono</td>
-            </tr>
-        </tbody>
-    </table>
+    <div th:if="${individuosFiltrados != null and !individuosFiltrados.empty}">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Edad</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="individuo : ${individuosFiltrados}">
+                    <td th:text="${individuo.nombre}">Nombre</td>
+                    <td th:text="${individuo.apellido}">Apellido</td>
+                    <td th:text="${individuo.edad}">Edad</td>
+                    <td th:text="${individuo.correo}">Correo</td>
+                    <td th:text="${individuo.telefono}">Teléfono</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:if="${individuosFiltrados == null or individuosFiltrados.empty}">
+        <h2>No se encontraron individuos</h2>
+    </div>
     <br>
     <a href="/">Volver al inicio</a>
     </main>

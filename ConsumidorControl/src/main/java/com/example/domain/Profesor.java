@@ -7,27 +7,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.io.Serializable;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "alumno")
-public class Alumno implements Serializable {
-    
-    private static final long serialVersionUID = 1L;
-    
+@Table(name = "profesor")
+public class Profesor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_alumno;
+    private int id_profesor;
     private String nombre;
     private String apellido;
-    private String curso;
-    private String seccion;
-    private String cdi;
-    @ManyToOne
-    @JoinColumn(name = "id_especialidad")
-    private Especialidad id_especialidad;
-    private String estado;
- 
+    private int cdi;
 }

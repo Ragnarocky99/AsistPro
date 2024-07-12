@@ -4,12 +4,13 @@
  */
 package com.example.dao;
 
-import com.example.domain.Alumno;
+import com.example.domain.Especialidad;
 import org.springframework.data.repository.CrudRepository;
 
 /**
  *
  * @author Anibal
  */
-public interface AlumnoDAO extends CrudRepository<Alumno, Integer> { 
+public interface EspecialidadDAO extends CrudRepository<Especialidad, Integer>{
+    
 }

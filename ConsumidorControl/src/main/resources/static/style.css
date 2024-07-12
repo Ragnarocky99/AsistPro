@@ -175,6 +175,14 @@ footer {
 
 .search-container {
     margin-bottom: 20px;
+    text-align: center; /* Alinea el contenido al centro */
+}
+
+.search-container form {
+    display: inline-block; /* Hace que el formulario sea un bloque en línea */
+    margin: 0 auto; /* Centra el formulario horizontalmente */
+ /* O ajusta el ancho según sea necesario */
+    max-width: 400px; /* Ejemplo: limita el ancho máximo del formulario */
 }
 
 .search-container input[type="text"] {

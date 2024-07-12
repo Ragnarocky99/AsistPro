@@ -1,3 +1,4 @@
+
 package com.example.domain;
 
 import jakarta.persistence.Entity;
@@ -5,29 +6,30 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.io.Serializable;
+import java.util.Set;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "alumno")
-public class Alumno implements Serializable {
-    
-    private static final long serialVersionUID = 1L;
+@Table(name = "sala")
+public class Sala {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_alumno;
+    private int id_sala;
     private String nombre;
-    private String apellido;
-    private String curso;
-    private String seccion;
-    private String cdi;
     @ManyToOne
-    @JoinColumn(name = "id_especialidad")
-    private Especialidad id_especialidad;
-    private String estado;
- 
+    @JoinColumn(name = "id_lector")
+    private LectorHuella lector_id;
+    @ManyToMany
+    @JoinTable(
+    name = "salas_por_enfasis",
+    inverseJoinColumns = @JoinColumn(name = "id_enfasis"))
+    private Set<Enfasis> enfasis;
+            
+    
 }
