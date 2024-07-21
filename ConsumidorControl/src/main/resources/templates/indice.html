@@ -1,53 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Lista de Individuos</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" th:href="@{/style.css/}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Inicio</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
+    <!-- Navigation Bar -->
     <header th:replace="plantilla/plantilla :: encabezado"/>
-    <main>
-        <h1>Lista de Individuos</h1>
-        <div class="search-container">
-            <form th:action="@{/buscarPorNombre}" method="get">
-                <input required type="text" name="nombre" placeholder="Buscar por nombre..." />
-                <button type="submit">Buscar</button>
-            </form>
-        </div>
-        <a href="/nuevoIndividuo" class="add-button">Agregar Nuevo Individuo</a>
-        <div th:if="${individuos != null and !individuos.empty}">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Edad</th>
-                        <th>Correo</th>
-                        <th>Teléfono</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="i : ${individuos}">
-                        <td th:text="${i.nombre}">Muestra nombre</td>
-                        <td th:text="${i.apellido}">Muestra apellido</td>
-                        <td th:text="${i.edad}">Muestra edad</td>
-                        <td th:text="${i.correo}">Muestra correo</td>
-                        <td th:text="${i.telefono}">Muestra teléfono</td>
-                        <td>
-                            <a th:href="@{/editarIndividuo/} + ${i.idindividuo}"class="edit-button">Editar</a>
-                            <a th:href="@{/eliminarIndividuo(idindividuo = ${i.idindividuo})}" class="delete-button">Eliminar</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div th:if="${individuos == null or individuos.empty}" class="no-data">
-            <p>La lista no contiene datos.</p>
+    <!-- Main Content -->
+    <main class="container">
+        <div class="container">
+            <h1>Bienvenido!</h1>
+
+            <div class="jumbotron mt-4" th:if="${especialidades != null and !especialidades.empty}">
+                <h2>Especialidades</h1>
+                <br>
+
+                <ul th:each="especialidad : ${especialidades}" class="list-group" >
+                    <li class="list-group-item h5"><a th:href="@{/verEspecialidad/{idEspe} (idEspe = ${especialidad.id_especialidad}) }" th:text="${especialidad.nombre}"></a></li>
+                </ul>
+            </div>
+            <div th:if="${especialidades == null or especialidades.empty}">
+                <h2>No hay nada por aqui...</h2>
+            </div>    
         </div>
     </main>
+    <!-- Footer -->
     <footer th:replace="plantilla/plantilla :: piedepagina"/>
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>
 </html>
