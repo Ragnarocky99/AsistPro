@@ -1,8 +1,10 @@
 package com.example.repository;
 
+import com.example.model.Especialidad;
 import com.example.model.Horario;
-import org.springframework.data.repository.CrudRepository;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface HorarioRepository extends CrudRepository<Horario, Integer> {
-    
+public interface HorarioRepository extends JpaRepository<Horario, Integer> {
+    List<Horario> findByEspecialidad(Especialidad especialidad);
 }

@@ -1,8 +1,8 @@
 package com.example.repository;
 
 import com.example.model.Asistencia;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AsistenciaRepository extends CrudRepository<Asistencia, Integer> {
+public interface AsistenciaRepository extends JpaRepository<Asistencia, Integer> {
     
 }

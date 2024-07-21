@@ -5,14 +5,10 @@
 package com.example.repository;
 
 import com.example.model.Especialidad;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- *
- * @author Anibal
-// */
 @Repository
-public interface EspecialidadRepository extends CrudRepository<Especialidad, Integer>{
+public interface EspecialidadRepository extends JpaRepository<Especialidad, Integer>{
     
 }
