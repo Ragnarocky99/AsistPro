@@ -5,31 +5,35 @@
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
     </head>
     <body>
         <header th:fragment="encabezado">
         
-            <nav>
-                <div class="nav-container">
-                    <a href="/" class="logo">Mi Sitio</a>
-                    <div class="nav-links">
-                        <a href="/home">Inicio</a>
-                        <a href="/about">Acerca de</a>
-                        <a href="/contact">Contacto</a>
-                    </div>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" th:href="@{/}">S.E.E.S</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/verFormularios}">Formularios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Especialidades</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/individuos/}">Individuos</a>
+                        </li>
+                    </ul>
                 </div>
             </nav>
         </header>
-        <footer th:fragment="piedepagina">
-            <div class="footer-container">
-                <p>&copy; 2024 Mi Sitio. Todos los derechos reservados.</p>
-                <div class="social-links">
-                    <a href="#">Facebook</a>
-                    <a href="#">Twitter</a>
-                    <a href="#">Instagram</a>
-                </div>
-            </div>
+    <footer class="footer mt-auto py-3 bg-light" th:fragment="piedepagina">
+        <div class="container">
+            <span class="text-muted">© 2024 Mi Sitio. Todos los derechos reservados.</span>
+        </div>
     </footer>
     </body>
 </html>
+ 

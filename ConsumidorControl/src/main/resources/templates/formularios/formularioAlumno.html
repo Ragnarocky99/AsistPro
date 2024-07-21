@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Alumno</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const seccionSelect = document.getElementById('seccion');
+            const especialidadSelect = document.getElementById('especialidad');
+            
+            const secciones = {
+                1: ['1', '2'],
+                2: ['1', '2'],
+                3: ['1', '2'],
+                4: ['1', '2'],
+                5: ['1', '2'],
+                6: ['1', '2', '3'],
+                7: ['1', '2', '3'],
+                8: ['1', '2', '3']
+            };
+            
+            especialidadSelect.addEventListener('change', function() {
+                const especialidadId = this.value;
+                updateSecciones(especialidadId);
+            });
+
+            function updateSecciones(especialidadId) {
+                seccionSelect.innerHTML = '<option value="" disabled selected>Seleccionar Sección</option>'; // Reset options
+
+                const opciones = secciones[especialidadId] || [];
+                opciones.forEach(function(seccion) {
+                    const option = document.createElement('option');
+                    option.value = seccion;
+                    option.textContent = seccion;
+                    seccionSelect.appendChild(option);
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <header th:replace="plantilla/plantilla :: encabezado"/>
+    <main class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="w-100" style="max-width: 600px;">
+            <h1 th:text="${alumno.id_alumno == 0 ? 'Nuevo Alumno' : 'Editar Alumno'}" class="text-center mb-4"></h1>
+
+            <form th:action="@{/alumnos/guardarAlumno}" th:object="${alumno}" method="post" class="p-4 border rounded shadow-sm bg-light">
+                <!-- Campos ocultos para el ID -->
+                <input type="hidden" th:field="*{id_alumno}" />
+
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre:</label>
+                    <input type="text" id="nombre" th:field="*{nombre}" class="form-control" required />
+                </div>
+                
+                <div class="mb-3">
+                    <label for="apellido" class="form-label">Apellido:</label>
+                    <input type="text" id="apellido" th:field="*{apellido}" class="form-control" required />
+                </div>
+                
+                <div class="mb-3">
+                    <label for="especialidad" class="form-label">Especialidad:</label>
+                    <select id="especialidad" th:field="*{especialidad}" class="form-select" required>
+                        <option value="">Seleccionar Especialidad</option>
+                        <option th:each="esp : ${especialidades}" 
+                                th:value="${esp.id_especialidad}" 
+                                th:text="${esp.nombre}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="curso" class="form-label">Curso:</label>
+                    <select id="curso" th:field="*{curso}" class="form-select" required>
+                        <option value="" disabled selected>Seleccionar Curso</option>
+                        <option value="PRIMERO">PRIMERO</option>
+                        <option value="SEGUNDO">SEGUNDO</option>
+                        <option value="TERCERO">TERCERO</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="seccion" class="form-label">Sección:</label>
+                    <select id="seccion" th:field="*{seccion}" class="form-select" required>
+                        <option value="" disabled selected>Seleccionar Sección</option>
+                        <!-- Opciones de sección se llenarán con JavaScript -->
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="cdi" class="form-label">CDI:</label>
+                    <input type="text" id="cdi" th:field="*{cdi}" class="form-control" required />
+                </div>
+
+
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a th:href="@{/}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </main>
+    <footer th:replace="plantilla/plantilla :: piedepagina"/>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</body>
+</html>
