@@ -45,5 +45,10 @@ public class AlumnoServiceImplement implements IAlumnoService{
                 .orElseThrow(() -> new RuntimeException("Especialidad no encontrada"));
         return alumnoRepository.findByEspecialidadAndCursoAndSeccion(especialidad, curso, seccion);
     }
+
+    @Override
+    public List<Alumno> buscarPorNombre(String nombre) {
+        return alumnoRepository.findByNombre(nombre);
+    }
     
 }

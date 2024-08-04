@@ -46,5 +46,6 @@ public class HorarioServiceImplement implements IHorarioService{
                 .orElseThrow(() -> new RuntimeException("NO se encontro la especialidad") );
         return horarioRepository.findByEspecialidad(especialidad);
     }
+
     
 }

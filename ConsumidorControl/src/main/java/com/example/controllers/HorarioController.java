@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -83,6 +84,29 @@ public class HorarioController {
         }
 
         horarioService.guardarHorario(horario);
+        return "redirect:/horarios/";
+    }
+    
+    @GetMapping("/editarHorario/{idhorario}")
+    public String editarHorario(@PathVariable("idhorario") int idHorario, Model model) {
+        Horario horario = horarioService.buscarHorarioPorId(idHorario);
+        List<Especialidad> especialidades = especialidadService.listarEspecialidades();
+        List<Sala> salas = salaService.listarSalas();
+        List<Profesor> profesores = profesorService.listarProfesores();
+        List<Materia> materias = materiaService.listarMaterias();
+
+        model.addAttribute("horario", horario);
+        model.addAttribute("especialidades", especialidades);
+        model.addAttribute("salas", salas);
+        model.addAttribute("profesores", profesores);
+        model.addAttribute("materias", materias);
+
+        return "formularios/formularioHorario";
+    }
+    
+    @GetMapping("/eliminarHorario/{idhorario}")
+    public String eliminarHorario (@PathVariable("idhorario") int id) {
+        horarioService.eliminarHorario(id);
         return "redirect:/horarios/";
     }
     

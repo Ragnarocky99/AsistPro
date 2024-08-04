@@ -10,6 +10,9 @@
     <header th:replace="plantilla/plantilla :: encabezado"/>  
     <main class="container">
         <h1>Horarios</h1>
+        <div class="text-center mb-3">
+            <a th:href="@{/horarios/nuevoHorario}" class="btn btn-primary">Agregar Nuevo Horario</a>
+        </div>
         <div th:if="${horarios != null and !horarios.empty}">
             <table class="table table-striped table-hover table-sm table-bordered">
                 <thead>
@@ -22,6 +25,7 @@
                         <th>Materia</th>
                         <th>Profesor</th>
                         <th>Sala</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,8 +36,12 @@
                         <td th:text="${#temporals.format(h.hora_inicio, 'HH:mm')}">hora inicio</td>
                         <td th:text="${#temporals.format(h.hora_fin, 'HH:mm')}">hora fin</td>
                         <td th:text="${h.materia.nombre}">materia</td>
-                        <td th:text="${h.profesor.nombre}">profesor</td>
+                        <td th:text="${h.profesor.nombre} + ' ' + ${h.profesor.apellido}">profesor</td>
                         <td th:text="${h.sala.nombre}">sala</td>
+                        <td>
+                            <a th:href="@{/horarios/editarHorario/} + ${h.id_horario}" class="btn btn-sm btn-warning">Editar</a>
+                            <a th:href="@{/horarios/eliminarHorario/{idhorario}(idhorario=${h.id_horario})}" class="btn btn-sm btn-danger">Eliminar</a>
+                        </td>
                     </tr>
                 </tbody>
             </table>

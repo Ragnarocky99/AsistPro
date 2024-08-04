@@ -25,7 +25,7 @@ public class IndividuoController {
     public String comienzo(Model model) {
         Iterable<Individuo> individuos = individuoServicio.listaIndividuos();
         model.addAttribute("individuos", individuos);
-        return "individuos"; // Suponiendo que "indice" es el nombre de tu vista HTML
+        return "verIndividuos"; // Suponiendo que "indice" es el nombre de tu vista HTML
     }
     
     @GetMapping("/nuevoIndividuo")
@@ -60,7 +60,7 @@ public class IndividuoController {
     public String buscarPorNombre(@RequestParam("nombre") String nombre, Model model) {
         List<Individuo> individuos = individuoServicio.buscarPorNombre(nombre);
         model.addAttribute("individuosFiltrados", individuos);
-        return "individuosFiltrados"; // Suponiendo que "individuos" es el nombre de tu vista HTML para mostrar los resultados
+        return "filtrados/individuosFiltrados"; // Suponiendo que "individuos" es el nombre de tu vista HTML para mostrar los resultados
     }
 
 }
