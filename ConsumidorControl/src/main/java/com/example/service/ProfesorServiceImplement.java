@@ -32,5 +32,11 @@ public class ProfesorServiceImplement implements IProfesorService{
         profesorRepository.deleteById(id);
     }
 
+    @Override
+    public List<Profesor> buscarPorNombre(String nombre) {
+        return profesorRepository.findByNombre(nombre);
+
+    }
+
     
 }

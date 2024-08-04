@@ -13,6 +13,7 @@ public interface IAlumnoService {
     Alumno buscarAlumnoPorID(int id);
     void eliminar(int id);
     List<Alumno> buscarAlumnosPorCursoYSeccion(int idespe, String curso, int seccion);
+    List<Alumno> buscarPorNombre(String nombre);
     
     
 }

@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.sql.Time;
+import java.time.LocalTime;
 import lombok.Data;
 
 @Data
@@ -22,15 +23,19 @@ public class Horario implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_horario;
     private int seccion;
-    private Time hora_inicio;
-    private Time hora_fin;
+    private LocalTime hora_inicio;
+    private LocalTime hora_fin;
     @ManyToOne
     @JoinColumn(name = "id_especialidad")
-    private Especialidad id_especialidad;
+    private Especialidad especialidad;
     @ManyToOne
     @JoinColumn(name = "id_sala")
-    private Sala id_sala;
+    private Sala sala;
     @ManyToOne
     @JoinColumn(name = "id_profesor")  
-    private Profesor id_profesor;
+    private Profesor profesor;
+    @ManyToOne
+    @JoinColumn(name = "id_materia")  
+    private Materia materia;
+    
 }

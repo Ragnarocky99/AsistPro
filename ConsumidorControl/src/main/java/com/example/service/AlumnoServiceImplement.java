@@ -9,7 +9,6 @@ import com.example.model.Especialidad;
 import com.example.repository.AlumnoRepository;
 import com.example.repository.EspecialidadRepository;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 @Service
@@ -45,6 +44,11 @@ public class AlumnoServiceImplement implements IAlumnoService{
         Especialidad especialidad = especialidadRepository.findById(idespe)
                 .orElseThrow(() -> new RuntimeException("Especialidad no encontrada"));
         return alumnoRepository.findByEspecialidadAndCursoAndSeccion(especialidad, curso, seccion);
+    }
+
+    @Override
+    public List<Alumno> buscarPorNombre(String nombre) {
+        return alumnoRepository.findByNombre(nombre);
     }
     
 }

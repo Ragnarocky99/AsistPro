@@ -1,8 +1,8 @@
 package com.example.repository;
 
 import com.example.model.Enfasis;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface EnfasisRepository extends CrudRepository<Enfasis, Integer>{
+public interface EnfasisRepository extends JpaRepository<Enfasis, Integer>{
     
 }

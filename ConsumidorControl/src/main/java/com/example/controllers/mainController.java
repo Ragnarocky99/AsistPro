@@ -51,4 +51,9 @@ public class mainController {
     public String verFormularios() {
         return "verFormularios";
     }
+    
+    @GetMapping("/verTablas")
+    public String verTablas() {
+        return "verTablas";
+    }
 }

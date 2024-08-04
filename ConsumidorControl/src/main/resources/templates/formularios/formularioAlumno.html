@@ -84,7 +84,9 @@
                     <label for="seccion" class="form-label">Sección:</label>
                     <select id="seccion" th:field="*{seccion}" class="form-select" required>
                         <option value="" disabled selected>Seleccionar Sección</option>
-                        <!-- Opciones de sección se llenarán con JavaScript -->
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3" th:if="${idEspe > 6}">3</option>
                     </select>
                 </div>
 

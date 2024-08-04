@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.time.LocalDate;
 import lombok.Data;
 
 @Data
@@ -21,8 +22,8 @@ public class Asistencia implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_asistencia;
-    private String idregistro;
     @ManyToOne
     @JoinColumn(name = "id_horario")
     private Horario horario;
+    private LocalDate fecha;
 }
