@@ -4,7 +4,9 @@
  */
 package com.example.service;
 
+import com.example.model.LectorHuella;
 import com.example.model.Sala;
+import com.example.repository.LectorHuellaRepository;
 import com.example.repository.SalaRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Service;
 public class SalaServiceImplement implements ISalaService{
     @Autowired
     private SalaRepository salaRepository;
+    @Autowired
+    private LectorHuellaRepository lectorRepo;
     
     @Override
     public List<Sala> listarSalas() {
@@ -33,6 +37,13 @@ public class SalaServiceImplement implements ISalaService{
     @Override
     public Sala buscarSalaPorId(int id) {
         return salaRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Sala buscarPorLector(int id) {
+        LectorHuella lector = lectorRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("LectorNoEncontrado"));
+        return salaRepository.findSalaByLector(lector);
     }
     
 }

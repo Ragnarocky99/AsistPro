@@ -1,6 +1,8 @@
 package com.example.service;
 
 import com.example.model.Asistencia;
+import com.example.model.Horario;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IAsistenciaService {
@@ -8,4 +10,5 @@ public interface IAsistenciaService {
     void guardarAsistencia(Asistencia asistencia);
     void eliminarAsistencia(int id);
     Asistencia buscarAsistenciaPorId(int id);
+    Asistencia buscarAsistenciaPorFechaYHorario(LocalDate fecha, Horario horario);
 }
