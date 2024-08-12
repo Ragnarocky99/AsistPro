@@ -7,8 +7,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.util.Set;
 import lombok.Data;
 
 @Data
@@ -30,5 +32,7 @@ public class Alumno implements Serializable {
     @JoinColumn(name = "id_especialidad")
     private Especialidad especialidad;
     private String estado;
+    @OneToMany(mappedBy = "alumno")
+    private Set<DetalleAsistencia> detalleAsistencia;
  
 }
