@@ -1,9 +1,13 @@
 package com.example.controllers;
 
+import com.example.model.Alumno;
 import com.example.model.Asistencia;
+import com.example.model.DetalleAsistencia;
 import com.example.model.Horario;
 import com.example.model.Sala;
+import com.example.service.IAlumnoService;
 import com.example.service.IAsistenciaService;
+import com.example.service.IDetalleAsistenciaService;
 import com.example.service.IEspecialidadService;
 import com.example.service.IHorarioService;
 import com.example.service.ISalaService;
@@ -32,6 +36,10 @@ public class AsistenciaController {
     private IEspecialidadService especialidadService;
     @Autowired
     private ISalaService salaService;
+    @Autowired
+    private IAlumnoService alumnoService;
+    @Autowired
+    private IDetalleAsistenciaService detalleService;
     
     
     @GetMapping("/")
@@ -63,33 +71,46 @@ public class AsistenciaController {
     }
     
     @GetMapping("/guardarAsistenciaAutomaticamente/{idLector}/{idAlumno}")
-    String asistenciaAutomatica(@PathVariable("idLector") int idLector, @PathVariable("idAlumno") int idAlumno) {
-        //todo esto si la cabera que corresponde no existe... o sea si nadie todavia se registro en este dia...
-        //el primero que se registre creara la cabecera a la que iran relacionados los "detalles de asistencia"
+    public String asistenciaAutomatica(@PathVariable("idLector") int idLector, @PathVariable("idAlumno") int idAlumno) {
         Sala salaActual = salaService.buscarPorLector(idLector);
-        
-        LocalTime horaActual = LocalTime.now();
-        Horario horario_actual = horarioService.buscarHorariosMasCercanos(salaActual.getId_sala(), horaActual);
-        if (horaActual != null) {
-            LocalDate fechaHoy = LocalDate.now();
-            Asistencia asistenciaExistence = asistenciaService.buscarAsistenciaPorFechaYHorario(fechaHoy, horario_actual);
-            if (asistenciaExistence == null) {
-                Asistencia asistencia = new Asistencia();
-                asistencia.setFecha(fechaHoy);
-                asistencia.setHorario(horario_actual);
-                asistenciaService.guardarAsistencia(asistencia);
-            }
-            else {
-            
-                System.out.println("\n!\n!\n!\n!\n!\n!!!!!!!!!!!!!!!!!!!\nla asistencia ya existe\n!!!!!!!!!!!");
-            
-            }
+        if (salaActual == null) {
+            return "redirect:/error"; // Redireccionar a una página de error si la sala no se encuentra
         }
 
-        
-        
-        return "redirect:/asistencias/";
+        LocalTime horaActual = LocalTime.now();
+        Horario horario_actual = horarioService.buscarHorariosMasCercanos(salaActual.getId_sala(), horaActual);
+        if (horario_actual == null) {
+            return "redirect:/no-horario"; // Redireccionar si no hay horario
+        }
+
+        LocalDate fechaHoy = LocalDate.now();
+        Asistencia asistenciaExistence = asistenciaService.buscarAsistenciaPorFechaYHorario(fechaHoy, horario_actual);
+
+        if (asistenciaExistence == null) {
+            Asistencia asistencia = new Asistencia();
+            asistencia.setFecha(fechaHoy);
+            asistencia.setHorario(horario_actual);
+            asistenciaService.guardarAsistencia(asistencia);
+            asistenciaExistence = asistencia; // Actualizar la referencia
+        }
+
+        Alumno alumno = alumnoService.buscarAlumnoPorID(idAlumno);
+        if (alumno == null) {
+            return "redirect:/error"; // Redireccionar si el alumno no se encuentra
+        }
+
+        DetalleAsistencia detalle = new DetalleAsistencia();
+        detalle.setAsistencia(asistenciaExistence);
+        detalle.setAlumno(alumno);
+        detalle.setHora_presencia(horaActual);
+
+        boolean esTarde = horario_actual.getHora_inicio().plusMinutes(20).isBefore(horaActual);
+        detalle.setEsta_presente(!esTarde);
+
+        detalleService.guardarDetalle(detalle);
+        return "redirect:/detalle-asistencias/verDetalles/" + asistenciaExistence.getId_asistencia();
     }
+
     
     
 }
