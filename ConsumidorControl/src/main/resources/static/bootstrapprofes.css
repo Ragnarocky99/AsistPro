@@ -12069,4 +12069,20 @@ textarea.form-control-lg {
   }
 }
 
+.link-row {
+    display: block;
+    color: inherit; /* Mantiene el color de texto predeterminado */
+    text-decoration: none; /* Quita el subrayado de los enlaces */
+}
+
+.row-content {
+    display: flex; /* Permite que el contenido se alinee en una sola fila */
+    justify-content: space-between; /* Espacia uniformemente el contenido */
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f5f5f5; /* Cambia el color de fondo al pasar el ratón */
+}
+
+
 /*# sourceMappingURL=bootstrap.css.map */

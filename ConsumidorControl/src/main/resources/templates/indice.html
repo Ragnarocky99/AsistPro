@@ -13,7 +13,10 @@
     <!-- Main Content -->
     <main class="container">
         <div class="container">
-            <h1>Bienvenido!</h1>
+            <h1 th:if="${advertencia == null}">Bienvenido!</h1>
+            <br th:if="${advertencia != null and !advertencia.empty}">
+            <h2 th:if="${advertencia != null and !advertencia.empty}" th:text="${advertencia}"></h2>
+            
 
             <div class="jumbotron mt-4" th:if="${especialidades != null and !especialidades.empty}">
                 <h2>Especialidades</h1>
