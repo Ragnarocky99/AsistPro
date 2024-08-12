@@ -5,31 +5,45 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link rel="stylesheet" th:href="@{/style2.css}"/>
     </head>
     <body>
         <header th:replace="plantilla/plantilla :: encabezado"/>  
         <main class="container">
-            <div th:if="${asistencias != null and !asistencias.empty}">
-                <h1>Asistencias</h1>
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Especialidad</th>
-                            <th>Materia</th>
-                            <th>Profesor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="asistencia : ${asistencias}">
-                            <td th:text="${asistencia.fecha}">Fecha</td>
-                            <td th:text="${asistencia.horario.especialidad.nombre}">Especialidad</td>
-                            <td th:text="${asistencia.horario.materia.nombre}">Materia</td>
-                            <td th:text="${asistencia.horario.profesor.nombre + ' ' + asistencia.horario.profesor.apellido}">Profesor</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <div th:if="${asistencias != null and !asistencias.empty}">
+            <h1>Asistencias</h1>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Especialidad</th>
+                        <th>Materia</th>
+                        <th>Profesor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="asistencia : ${asistencias}">
+                        <td>
+                            <a th:href="@{/detalle-asistencias/verDetalles/{idAsistencia} (idAsistencia = ${asistencia.id_asistencia}) }" class="link-row" 
+                               th:text="${asistencia.fecha}">Fecha</a>
+                        </td>
+                        <td>
+                            <a th:href="@{/detalle-asistencias/verDetalles/{idAsistencia} (idAsistencia = ${asistencia.id_asistencia}) }" class="link-row"
+                               th:text="${asistencia.horario.especialidad.nombre}">Especialidad</a>
+                        </td>
+                        <td>
+                            <a th:href="@{/detalle-asistencias/verDetalles/{idAsistencia} (idAsistencia = ${asistencia.id_asistencia}) }" class="link-row"
+                               th:text="${asistencia.horario.materia.nombre}">Materia</a>
+                        </td>
+                        <td>
+                            <a th:href="@{/detalle-asistencias/verDetalles/{idAsistencia} (idAsistencia = ${asistencia.id_asistencia}) }" class="link-row"
+                               th:text="${asistencia.horario.profesor.nombre + ' ' + asistencia.horario.profesor.apellido}">Profesor</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
             <div th:if="${asistencias == null or asistencias.empty}">
                 <h1>No se tienen asistencias registradas</h1>
             </div>
