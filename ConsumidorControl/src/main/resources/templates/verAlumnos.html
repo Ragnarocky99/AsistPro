@@ -42,7 +42,7 @@
                             <td th:text="${a.cdi}"></td>
                             <td>
                                 <a th:href="@{/alumnos/editarAlumno/} + ${a.id_alumno}" class="btn btn-sm btn-warning">Editar</a>
-                                <a th:href="@{/alumnos/{idalumno}(idalumno=${a.id_alumno})}" class="btn btn-sm btn-danger">Eliminar</a>
+                                <a th:href="@{/alumnos/eliminarAlumno/{idAlumno} (idAlumno=${a.id_alumno}) }" class="btn btn-sm btn-danger">Eliminar</a>
                             </td>
                         </tr>
                     </tbody>

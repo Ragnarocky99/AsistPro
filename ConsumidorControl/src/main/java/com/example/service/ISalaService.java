@@ -16,4 +16,5 @@ public interface ISalaService {
     void eliminarSala(int id);
     void guardarSala(Sala sala);
     Sala buscarSalaPorId(int id);
+    Sala buscarPorLector(int id);
 }

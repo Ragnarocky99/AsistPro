@@ -5,6 +5,7 @@
 package com.example.service;
 
 import com.example.model.Horario;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface IHorarioService {
@@ -13,4 +14,6 @@ public interface IHorarioService {
     void eliminarHorario(int id);
     Horario buscarHorarioPorId(int id);
     List<Horario> buscarHorarioPorEspeciialidad(int idespecialidad);
+    Horario buscarPorSalaYPorHora(int sala, LocalTime hora);
+    Horario buscarHorariosMasCercanos(int idsala, LocalTime hora);
 }

@@ -6,9 +6,14 @@ package com.example.service;
 
 import com.example.model.Especialidad;
 import com.example.model.Horario;
+import com.example.model.Sala;
 import com.example.repository.EspecialidadRepository;
 import com.example.repository.HorarioRepository;
+import com.example.repository.LectorHuellaRepository;
+import com.example.repository.SalaRepository;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +24,10 @@ public class HorarioServiceImplement implements IHorarioService{
     private HorarioRepository horarioRepository;
     @Autowired
     private EspecialidadRepository especialiadRepository;
+    @Autowired
+    private SalaRepository salaRepo;
+    @Autowired
+    private LectorHuellaRepository lectorRepo;
 
     @Override
     public List<Horario> listarHorarios() {
@@ -45,6 +54,20 @@ public class HorarioServiceImplement implements IHorarioService{
         Especialidad especialidad = especialiadRepository.findById(idespecialidad)
                 .orElseThrow(() -> new RuntimeException("NO se encontro la especialidad") );
         return horarioRepository.findByEspecialidad(especialidad);
+    }
+
+    @Override
+    public Horario buscarPorSalaYPorHora(int idSala, LocalTime hora) {
+        throw new UnsupportedOperationException("Not supported yet.");
+
+    }
+
+    @Override
+    public Horario buscarHorariosMasCercanos(int idsala, LocalTime hora) {
+        Sala sala = salaRepo.findById(idsala)
+                .orElseThrow(() -> new RuntimeException("NO se encontro la sala"));
+        System.out.println("sala: " + sala.getNombre());
+        return horarioRepository.findHariosDisponibles(idsala, hora);
     }
 
     
