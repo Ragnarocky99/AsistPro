@@ -18,26 +18,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping(value = "alumnos")
 public class AlumnoController {
-    
+
     @Autowired
     private IAlumnoService alumnoService;
     @Autowired
     private IEspecialidadService especialidadService;
-    
+
     @GetMapping("/")
-    public String verAlumnos(Model model){
+    public String verAlumnos(Model model) {
         List<Alumno> alumnos = alumnoService.listarAlumnos();
         model.addAttribute("alumnos", alumnos);
         return "verAlumnos";
     }
-    
+
     @GetMapping("/nuevoAlumno")
     public String nuevoAlumno(Model model) {
         model.addAttribute("alumno", new Alumno());
         model.addAttribute("especialidades", especialidadService.listarEspecialidades());
         return "formularios/formularioAlumno";
     }
-    
+
     @PostMapping("/guardarAlumno")
     public String guardarAlumno(@Valid Alumno alumno, Errors error) {
         if (error.hasErrors()) {
@@ -46,14 +46,14 @@ public class AlumnoController {
         alumnoService.guardar(alumno);
         return "redirect:/alumnos/";
     }
-    
+
     @GetMapping("/buscarPorNombre")
     public String buscarAlumnoPorNombre(@RequestParam("nombre") String nombre, Model model) {
         List<Alumno> alumnosFiltrados = alumnoService.buscarPorNombre(nombre);
         model.addAttribute("alumnosFiltrados", alumnosFiltrados);
         return "filtrados/alumnosFiltrados";
     }
-    
+
     @GetMapping("/editarAlumno/{idalumno}")
     public String editarAlumno(@PathVariable("idalumno") int id, Model model) {
         Alumno alumno = alumnoService.buscarAlumnoPorID(id);
@@ -61,5 +61,12 @@ public class AlumnoController {
         model.addAttribute("especialidades", especialidadService.listarEspecialidades());
         return "formularios/formularioAlumno";
     }
-    
+
+    @GetMapping("/eliminarAlumno/{idAlumno}")
+    public String eliminarAlumno(@PathVariable("idAlumno") int id) {
+        alumnoService.eliminar(id);
+        return "redirect:/alumnos/";
+
+    }
+
 }

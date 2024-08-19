@@ -16,21 +16,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class DetalleController {
     @Autowired
     private IDetalleAsistenciaService detalleService;
-    
+
     @GetMapping("/verDetalles/{idAsistencia}")
-    public String verDetallesPorAsistencia(@PathVariable("idAsistencia") int idAsistencia, Model model, RedirectAttributes redirect) {
+    public String verDetallesPorAsistencia(@PathVariable("idAsistencia") int idAsistencia, Model model,
+            RedirectAttributes redirect) {
         List<DetalleAsistencia> detalles = detalleService.listarDetallesPorAsistencia(idAsistencia);
         if (detalles != null && !detalles.isEmpty()) {
-            model.addAttribute("detalleCabecera", detalles.getFirst());
+            model.addAttribute("detalleCabecera", detalles.get(0));
             model.addAttribute("detalles", detalles);
             return "verDetalles";
         }
         redirect.addFlashAttribute("advertencia", "No se registraron asistencias este dia");
         return "redirect:/";
-        
-        
+
     }
-    
-    
-    
+
 }
