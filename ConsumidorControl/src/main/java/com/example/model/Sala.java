@@ -27,7 +27,7 @@ public class Sala implements Serializable {
     private String nombre;
     @ManyToOne
     @JoinColumn(name = "id_lector")
-    private LectorHuella lector_id;
+    private LectorHuella lector;
     @ManyToMany
     @JoinTable(
     name = "salas_por_enfasis",
