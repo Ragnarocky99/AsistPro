@@ -56,4 +56,9 @@ public class mainController {
     public String verTablas() {
         return "verTablas";
     }
+    
+    @GetMapping("/verAsistenciasPorCurso")
+    public String verAsistenciasCurso(){
+        return "verAsistenciaCurso";
+    }
 }

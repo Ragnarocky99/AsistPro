@@ -3,6 +3,7 @@ package com.example.controllers;
 import com.example.model.Alumno;
 import com.example.model.Asistencia;
 import com.example.model.DetalleAsistencia;
+import com.example.model.Especialidad;
 import com.example.model.Horario;
 import com.example.model.Sala;
 import com.example.service.IAlumnoService;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping(value = "asistencias")
@@ -109,6 +111,25 @@ public class AsistenciaController {
 
         detalleService.guardarDetalle(detalle);
         return "redirect:/detalle-asistencias/verDetalles/" + asistenciaExistence.getId_asistencia();
+    }
+    
+    
+    @Autowired
+    private IDetalleAsistenciaService detalleAsistenciaService;
+
+    @GetMapping("/verAsistencias/{idEspe}/alumnos")
+    public String verAlumnosPorCursoSeccionFecha(
+                                                @PathVariable("idEspe") int idEspe,
+                                                @RequestParam("curso") String curso, 
+                                                @RequestParam("seccion") int seccion, 
+                                                @RequestParam("fecha") LocalDate fecha, 
+                                                Model model) {
+        List<Alumno> alumnos = alumnoService.buscarAlumnosPorCursoYSeccion(idEspe, curso, seccion);
+        Especialidad especialidadSeleccionada = especialidadService.buscarEspecialidadPorId(idEspe);
+        model.addAttribute("especialidad", especialidadSeleccionada);
+        model.addAttribute("alumnos", alumnos);
+
+        return "verAlumnos";
     }
 
     

@@ -2,6 +2,7 @@ package com.example.controllers;
 
 import com.example.model.DetalleAsistencia;
 import com.example.service.IDetalleAsistenciaService;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,7 @@ public class DetalleController {
         if (detalles != null && !detalles.isEmpty()) {
             model.addAttribute("detalleCabecera", detalles.get(0));
             model.addAttribute("detalles", detalles);
+            
             return "verDetalles";
         }
         redirect.addFlashAttribute("advertencia", "No se registraron asistencias este dia");

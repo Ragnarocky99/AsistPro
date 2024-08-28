@@ -2,6 +2,7 @@ package com.example.controllers;
 
 import com.example.model.Alumno;
 import com.example.service.IAlumnoService;
+import com.example.service.IDetalleAsistenciaService;
 import com.example.service.IEspecialidadService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -67,6 +68,20 @@ public class AlumnoController {
         alumnoService.eliminar(id);
         return "redirect:/alumnos/";
 
+    }
+    
+    @Autowired
+    private IDetalleAsistenciaService detalleAsistenciaService;
+
+    @GetMapping("/verAsistencias/{idEspe}/alumnos")
+    public String verAlumnosPorCursoSeccionFecha(
+                                                @RequestParam("curso") String curso, 
+                                                @RequestParam("seccion") String seccion, 
+                                                @RequestParam("fecha") String fecha, 
+                                                Model model) {
+
+
+        return "verAlumnos";
     }
 
 }

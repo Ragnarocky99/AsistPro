@@ -47,9 +47,35 @@
             <div th:if="${alumnos != null and !alumnos.empty}">
                 <h2>Lista de Alumnos</h2>
                 <ul class="list-group">
-                    <li th:each="alumno : ${alumnos}" class="list-group-item" th:text="${alumno.nombre} + ' ' + ${alumno.apellido}"></li>
+                    <li th:each="alumno : ${alumnos}" class="list-group-item" th:text="${alumno.nombre} + ' ' + ${alumno.apellido}" th></li>
+                    
                 </ul>
             </div>
+                <div th:if="${alumnos != null and !alumnos.empty}">
+        <table class="table">
+            <thead>
+                <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Curso</th>
+                            <th>Seccion</th>
+                            <th>Especialidad</th>
+                            <th>CDI</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="a : ${alumnos}">
+                            <td th:text="${a.nombre}">Muestra nombre</td>
+                            <td th:text="${a.apellido}">Muestra apellido</td>
+                            <td th:text="${a.curso}">Muestra curso</td>
+                            <td th:text="${a.seccion}">Muestra seccion</td>
+                            <td th:text="${a.especialidad.nombre}">Muestra especialidad</td>
+                            <td th:text="${a.cdi}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
             <div th:if="${alumnos == null or alumnos.empty}"><!-- comment -->
                 <h1>No se encontro el curso...</h1>
                 <h6>Seguro que buscaste bien?</h6>
