@@ -5,6 +5,7 @@
 package com.example.controllers;
 
 import com.example.model.AppUser;
+import com.example.model.Profesor;
 import com.example.model.RegisterDto;
 import com.example.repository.ProfesorRepository;
 import com.example.repository.AppUserRepository;
@@ -74,6 +75,7 @@ public class AccountController {
         // Determinar el rol en función de si el email existe en la otra tabla
         String role;
         var otherTableEntry = prof.findByCorreo(registerDto.getEmail());
+        
         if (otherTableEntry != null) {
             role = "PROFESOR"; // Si el email existe en la otra tabla, asignar el rol de PROFESOR
         } else {
