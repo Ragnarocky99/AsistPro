@@ -8,4 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface ProfesorRepository extends JpaRepository<Profesor, Integer>{
     @Query("SELECT p FROM Profesor p WHERE LOWER(p.nombre) LIKE LOWER(CONCAT(:nombre, '%'))")
     List<Profesor> findByNombre(String nombre);
+    
+    @Query("SELECT p FROM Profesor p WHERE LOWER (p.correo) LIKE LOWER(CONCAT(:correo, '%'))")
+    Profesor findByCorreo(String correo);
 }

@@ -21,4 +21,5 @@ public class Profesor implements Serializable {
     private String nombre;
     private String apellido;
     private int cdi;
+    private String correo;
 }

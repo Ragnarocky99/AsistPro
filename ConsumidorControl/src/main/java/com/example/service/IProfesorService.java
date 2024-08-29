@@ -18,6 +18,7 @@ public interface IProfesorService {
     Profesor buscarProfesorPorID(int id);
     void eliminar(int id);
     List<Profesor> buscarPorNombre(String nombre);
+    Profesor buscarPorCorreo(String correo);
     
     
 }
