@@ -83,5 +83,17 @@ public class AlumnoController {
 
         return "verAlumnos";
     }
+    
+    @GetMapping("/desactivarCurso/{idAlumno}")
+    public String desactivarCurso(@PathVariable("idAlumno") int idalumno) {
+        Alumno a = alumnoService.buscarAlumnoPorID(idalumno);
+        
+        List<Alumno> curso = alumnoService.buscarAlumnosPorCursoYSeccionYEstado(a.getEspecialidad().getId_especialidad(), a.getCurso(), a.getSeccion(), "activo");
+        for (Alumno alumno : curso) {
+            alumno.setEstado("inactivo");
+            alumnoService.guardar(alumno);
+        }
+        return "redirect:/" ; 
+    }
 
 }

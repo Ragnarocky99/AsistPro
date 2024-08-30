@@ -24,17 +24,30 @@ public class ExcelService {
             throws IOException {
         List<Alumno> alumnos = new ArrayList<>();
 
-        try (InputStream is = file.getInputStream();
-                Workbook workbook = new XSSFWorkbook(is)) {
+        try (InputStream is = file.getInputStream(); Workbook workbook = new XSSFWorkbook(is)) {
             Sheet sheet = workbook.getSheetAt(0);
-            for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+            for (int rowIndex = 3; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
 
-                if (row != null && row.getCell(0) != null) { // Ensure the row and first cell are not null
+                if (row != null) {
                     Alumno alumno = new Alumno();
-                    alumno.setNombre(row.getCell(0).getStringCellValue());
-                    alumno.setApellido(row.getCell(1).getStringCellValue());
-                    alumno.setCdi(String.valueOf((int) row.getCell(2).getNumericCellValue()));
+
+                    // Lee la celda de CD
+                    Cell cdiCell = row.getCell(1);
+                    if (cdiCell != null) {
+                        alumno.setCdi(cdiCell.toString()); // Convertir el valor a string
+                    }
+
+                    // Lee el nombre y apellido
+                    Cell nombreYApellidoCell = row.getCell(2);
+                    if (nombreYApellidoCell != null) {
+                        String nombreYApellido = nombreYApellidoCell.toString();
+                        String[] partes = nombreYApellido.split(" ", 3);
+                        String apellido = partes[0] + " " + partes[1]; // Asumiendo que los dos primeros elementos son los apellidos
+                        String nombre = partes.length > 2 ? partes[2] : "";
+                        alumno.setNombre(nombre);
+                        alumno.setApellido(apellido);
+                    }
 
                     Especialidad especialidad = new Especialidad();
                     especialidad.setId_especialidad(idEspecialidad);

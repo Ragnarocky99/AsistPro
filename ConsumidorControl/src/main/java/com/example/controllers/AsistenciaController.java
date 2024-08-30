@@ -71,20 +71,32 @@ public class AsistenciaController {
         asistenciaService.guardarAsistencia(asistencia);
         return "redirect:/asistencias/";
     }
-    
+
     @GetMapping("/guardarAsistenciaAutomaticamente/{idLector}/{idAlumno}")
     public String asistenciaAutomatica(@PathVariable("idLector") int idLector, @PathVariable("idAlumno") int idAlumno) {
+        LocalTime horaActual = LocalTime.now();
+
+        // Verificar si la hora actual está entre 9:20 y 9:40 o entre 12:00 y 13:00
+        if ((horaActual.isAfter(LocalTime.of(9, 20)) && horaActual.isBefore(LocalTime.of(9, 40))) ||
+            (horaActual.isAfter(LocalTime.of(12, 0)) && horaActual.isBefore(LocalTime.of(13, 0)))) {
+            return "redirect:/"; // Redireccionar o manejar la situación
+        }
+
         Sala salaActual = salaService.buscarPorLector(idLector);
         if (salaActual == null) {
             return "redirect:/error"; // Redireccionar a una página de error si la sala no se encuentra
         }
 
-        LocalTime horaActual = LocalTime.now();
-        Horario horario_actual = horarioService.buscarHorariosMasCercanos(salaActual.getId_sala(), horaActual);
-        if (horario_actual == null) {
-            return "redirect:/no-horario"; // Redireccionar si no hay horario
+        Alumno a = alumnoService.buscarAlumnoPorID(idAlumno);
+        if (a == null) {
+            return "redirect:/error"; // Redireccionar si el alumno no se encuentra
         }
 
+        Horario horario_actual = horarioService.buscarHorariosMasCercanos(salaActual.getId_sala(), horaActual);
+        if (horario_actual == null) {
+            return "redirect:/"; // Redireccionar si no hay horario
+        }
+        
         LocalDate fechaHoy = LocalDate.now();
         Asistencia asistenciaExistence = asistenciaService.buscarAsistenciaPorFechaYHorario(fechaHoy, horario_actual);
 
@@ -94,25 +106,34 @@ public class AsistenciaController {
             asistencia.setHorario(horario_actual);
             asistenciaService.guardarAsistencia(asistencia);
             asistenciaExistence = asistencia; // Actualizar la referencia
+
+            List<Alumno> curso = alumnoService.buscarAlumnosPorCursoSeccionEspe(a.getEspecialidad().getId_especialidad(), a.getCurso(), a.getSeccion());
+            for (Alumno alumno : curso) {
+                DetalleAsistencia detalle = new DetalleAsistencia();
+                detalle.setAsistencia(asistenciaExistence);
+                detalle.setAlumno(alumno);
+                detalle.setHora_presencia(null);
+
+                boolean esTarde = horario_actual.getHora_inicio().plusMinutes(20).isBefore(horaActual);
+                detalle.setEsta_presente(!esTarde);
+
+                detalleService.guardarDetalle(detalle);
+            }
         }
 
-        Alumno alumno = alumnoService.buscarAlumnoPorID(idAlumno);
-        if (alumno == null) {
-            return "redirect:/error"; // Redireccionar si el alumno no se encuentra
+        int idasistencia = asistenciaExistence.getId_asistencia();
+        DetalleAsistencia d = detalleService.buscarAsistenciaDeAlumno(idAlumno, idasistencia);
+        if (d != null) {
+            d.setEsta_presente(true);
+            d.setHora_presencia(horaActual);
+            detalleService.guardarDetalle(d);
+        } else {
+            return "redirect:/error";
         }
 
-        DetalleAsistencia detalle = new DetalleAsistencia();
-        detalle.setAsistencia(asistenciaExistence);
-        detalle.setAlumno(alumno);
-        detalle.setHora_presencia(horaActual);
-
-        boolean esTarde = horario_actual.getHora_inicio().plusMinutes(20).isBefore(horaActual);
-        detalle.setEsta_presente(!esTarde);
-
-        detalleService.guardarDetalle(detalle);
         return "redirect:/detalle-asistencias/verDetalles/" + asistenciaExistence.getId_asistencia();
     }
-    
+
     
     @Autowired
     private IDetalleAsistenciaService detalleAsistenciaService;
@@ -124,7 +145,7 @@ public class AsistenciaController {
                                                 @RequestParam("seccion") int seccion, 
                                                 @RequestParam("fecha") LocalDate fecha, 
                                                 Model model) {
-        List<Alumno> alumnos = alumnoService.buscarAlumnosPorCursoYSeccion(idEspe, curso, seccion);
+        List<Alumno> alumnos = alumnoService.buscarAlumnosPorCursoYSeccionYEstado(idEspe, curso, seccion, "activo");
         Especialidad especialidadSeleccionada = especialidadService.buscarEspecialidadPorId(idEspe);
         model.addAttribute("especialidad", especialidadSeleccionada);
         model.addAttribute("alumnos", alumnos);

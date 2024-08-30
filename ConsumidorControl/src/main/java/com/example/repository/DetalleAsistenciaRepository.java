@@ -1,5 +1,6 @@
 package com.example.repository;
 
+import com.example.model.Asistencia;
 import com.example.model.DetalleAsistencia;
 import com.example.model.DetalleAsistenciaId;
 import java.util.List;
@@ -13,5 +14,12 @@ public interface DetalleAsistenciaRepository extends JpaRepository<DetalleAsiste
     // Usar el nombre de la entidad y su propiedad
     @Query(value = "SELECT * FROM detalle_asistencia d WHERE d.id_asistencia = :idAsistencia", nativeQuery = true)
     List<DetalleAsistencia> findDetallesAsistencia(@Param("idAsistencia") int idAsistencia);
+    
+    @Query(value = "SELECT * FROM detalle_asistencia d WHERE d.id_asistencia = :idAsis AND d.id_alumno = :idAlumno", nativeQuery = true)
+    DetalleAsistencia findByAlumnoAndAsistencia(@Param("idAlumno") int idalumno, @Param("idAsis") int idAsis);
+            
+    
+
+    List<DetalleAsistencia> findDetalleAsistenciaByAsistencia(Asistencia asis);
 }
 

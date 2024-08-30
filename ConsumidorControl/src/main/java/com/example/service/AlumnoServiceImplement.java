@@ -40,15 +40,20 @@ public class AlumnoServiceImplement implements IAlumnoService{
     }
 
     @Override
-    public List<Alumno> buscarAlumnosPorCursoYSeccion(int idespe, String curso, int seccion) {
+    public List<Alumno> buscarAlumnosPorCursoYSeccionYEstado(int idespe, String curso, int seccion, String estado) {
         Especialidad especialidad = especialidadRepository.findById(idespe)
                 .orElseThrow(() -> new RuntimeException("Especialidad no encontrada"));
-        return alumnoRepository.findByEspecialidadAndCursoAndSeccion(especialidad, curso, seccion);
+        return alumnoRepository.findByEspecialidadAndCursoAndSeccionAndEstado(especialidad, curso, seccion, "activo");
     }
 
     @Override
     public List<Alumno> buscarPorNombre(String nombre) {
         return alumnoRepository.findByNombre(nombre);
+    }
+
+    @Override
+    public List<Alumno> buscarAlumnosPorCursoSeccionEspe(int idespe, String curso, int seccion) {
+        return alumnoRepository.findByEspecialidadAndCursoAndSeccion(seccion, curso, seccion);
     }
     
 }
