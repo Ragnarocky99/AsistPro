@@ -10,5 +10,5 @@ public interface ProfesorRepository extends JpaRepository<Profesor, Integer>{
     List<Profesor> findByNombre(String nombre);
     
     @Query("SELECT p FROM Profesor p WHERE LOWER (p.correo) LIKE LOWER(CONCAT(:correo, '%'))")
-    List<Profesor> findByCorreo(String correo);
+    Profesor findByCorreo(String correo);
 }
