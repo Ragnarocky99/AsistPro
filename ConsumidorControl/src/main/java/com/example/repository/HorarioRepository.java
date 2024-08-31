@@ -12,6 +12,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface HorarioRepository extends JpaRepository<Horario, Integer> {
     List<Horario> findByEspecialidad(Especialidad especialidad);
-    @Query(value = "SELECT * FROM horario h WHERE h.id_sala = :id_sala AND h.hora_inicio <= :horaActual order by hora_inicio desc limit 1", nativeQuery = true )
-    Horario findHariosDisponibles(@Param("id_sala") int id_sala, @Param("horaActual") LocalTime horaActual);
+    @Query(value = "SELECT * FROM horario h WHERE h.id_sala = :id_sala AND h.hora_inicio <= :horaActual AND h.id_especialidad = :espe AND h.seccion = :seccion order by hora_inicio desc limit 1", nativeQuery = true )
+    Horario findHariosDisponibles(@Param("id_sala") int id_sala, @Param("horaActual") LocalTime horaActual, @Param("espe") int especialidad, int seccion);
 }

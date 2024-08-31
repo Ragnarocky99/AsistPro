@@ -31,4 +31,6 @@ public class DetalleAsistencia{
     @ManyToOne
     @JoinColumn(name = "id_alumno")
     private Alumno alumno;
+            
 }
+

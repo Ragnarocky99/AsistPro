@@ -10,5 +10,9 @@ public interface IDetalleAsistenciaService {
     DetalleAsistencia localizarDetalleporId(DetalleAsistenciaId id);
     void guardarDetalle(DetalleAsistencia detalle);
     List<DetalleAsistencia> listarDetallesPorAsistencia(int idAsistencia);
+    DetalleAsistencia buscarAsistenciaDeAlumno(int idAlumno, int idAsistencia);
+    List<DetalleAsistencia> buscarDetallesPorAsistencia(int idasis);
+    
+    
     
 }
