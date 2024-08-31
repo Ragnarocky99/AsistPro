@@ -57,6 +57,7 @@
                                 <form th:action="@{/detalle-asistencias/actualizarPresencia/{idAsistencia}/{idAlumno}(idAsistencia=${d.asistencia.id_asistencia}, idAlumno=${d.alumno.id_alumno})}" method="post" class="d-inline">
                                     <div class="form-check form-switch checkbox-container">
                                         <input type="checkbox" name="esta_presente" th:checked="${d.esta_presente}" onchange="this.form.submit()" class="form-check-input" />
+
                                     </div>
                                 </form>
                             </td>

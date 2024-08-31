@@ -41,9 +41,8 @@ public class AlumnoServiceImplement implements IAlumnoService{
 
     @Override
     public List<Alumno> buscarAlumnosPorCursoYSeccionYEstado(int idespe, String curso, int seccion, String estado) {
-        Especialidad especialidad = especialidadRepository.findById(idespe)
-                .orElseThrow(() -> new RuntimeException("Especialidad no encontrada"));
-        return alumnoRepository.findByEspecialidadAndCursoAndSeccionAndEstado(especialidad, curso, seccion, "activo");
+        Especialidad espe = especialidadRepository.findById(idespe).orElse(null);
+        return alumnoRepository.findByEspecialidadAndCursoAndSeccionAndEstado(espe, curso, seccion, "activo");
     }
 
     @Override
@@ -53,7 +52,12 @@ public class AlumnoServiceImplement implements IAlumnoService{
 
     @Override
     public List<Alumno> buscarAlumnosPorCursoSeccionEspe(int idespe, String curso, int seccion) {
-        return alumnoRepository.findByEspecialidadAndCursoAndSeccion(seccion, curso, seccion);
+        return alumnoRepository.findByEspecialidadAndCursoAndSeccion(idespe, curso, seccion);
+    }
+
+    @Override
+    public List<Alumno> buscarCurso(Especialidad espe, String curso, int seccion, String estado) {
+        return alumnoRepository.findByEspecialidadAndCursoAndSeccionAndEstado(espe, curso, seccion, estado);
     }
     
 }

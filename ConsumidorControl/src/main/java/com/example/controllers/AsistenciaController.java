@@ -13,6 +13,7 @@ import com.example.service.IEspecialidadService;
 import com.example.service.IHorarioService;
 import com.example.service.ISalaService;
 import jakarta.validation.Valid;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -30,9 +31,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping(value = "asistencias")
 public class AsistenciaController {
+
     @Autowired
     private IAsistenciaService asistenciaService;
-    @Autowired 
+    @Autowired
     private IHorarioService horarioService;
     @Autowired
     private IEspecialidadService especialidadService;
@@ -42,16 +44,14 @@ public class AsistenciaController {
     private IAlumnoService alumnoService;
     @Autowired
     private IDetalleAsistenciaService detalleService;
-    
-    
+
     @GetMapping("/")
-    public String verAsistencias(Model model){
+    public String verAsistencias(Model model) {
         List<Asistencia> asistencias = asistenciaService.listarAsistencias();
         model.addAttribute("asistencias", asistencias);
         return "verAsistencias";
     }
-    
-    
+
     @GetMapping("/nuevaAsistencia")
     public String nuevaAsistencia(Model model) {
         Asistencia asistencia = new Asistencia();
@@ -60,7 +60,7 @@ public class AsistenciaController {
         model.addAttribute("horarios", horarios);
         return "formularios/formularioAsistencia";
     }
-    
+
     @PostMapping("/guardarAsistencia")
     public String saveAsistencia(@Valid @ModelAttribute("asistencia") Asistencia asistencia, BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -75,29 +75,42 @@ public class AsistenciaController {
     @GetMapping("/guardarAsistenciaAutomaticamente/{idLector}/{idAlumno}")
     public String asistenciaAutomatica(@PathVariable("idLector") int idLector, @PathVariable("idAlumno") int idAlumno) {
         LocalTime horaActual = LocalTime.now();
-
-        // Verificar si la hora actual está entre 9:20 y 9:40 o entre 12:00 y 13:00
-        if ((horaActual.isAfter(LocalTime.of(9, 20)) && horaActual.isBefore(LocalTime.of(9, 40))) ||
-            (horaActual.isAfter(LocalTime.of(12, 0)) && horaActual.isBefore(LocalTime.of(13, 0)))) {
-            return "redirect:/"; // Redireccionar o manejar la situación
+        LocalDate fechaHoy = LocalDate.now();
+        DayOfWeek diaSemana = fechaHoy.getDayOfWeek();
+        if (diaSemana == DayOfWeek.SATURDAY || diaSemana == DayOfWeek.SUNDAY) {
+            return "redirect:/dia-no-permitido"; // Redireccionar o manejar la situación si es sábado o domingo
+        }
+        if ((horaActual.isAfter(LocalTime.of(9, 20)) && horaActual.isBefore(LocalTime.of(9, 40)))
+                || (horaActual.isAfter(LocalTime.of(12, 0)) && horaActual.isBefore(LocalTime.of(13, 0)))) {
+            return "redirect:/horario-no-permitido"; // Redireccionar o manejar la situación
         }
 
+        // Verificar si la hora actual está entre 9:20 y 9:40 o entre 12:00 y 13:00
         Sala salaActual = salaService.buscarPorLector(idLector);
         if (salaActual == null) {
+            System.out.println("sala no encontradad");
             return "redirect:/error"; // Redireccionar a una página de error si la sala no se encuentra
         }
 
         Alumno a = alumnoService.buscarAlumnoPorID(idAlumno);
         if (a == null) {
+            System.out.println("alumno no encontrado");
             return "redirect:/error"; // Redireccionar si el alumno no se encuentra
         }
+        System.out.println("/\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        System.out.println("alumno" + a.getNombre());
+        System.out.println("alumno" + a.getEspecialidad().getNombre());
+        System.out.println("alumno" + a.getCurso());
+        System.out.println("alumno" + a.getSeccion());
 
-        Horario horario_actual = horarioService.buscarHorariosMasCercanos(salaActual.getId_sala(), horaActual);
+        Horario horario_actual = horarioService.buscarHorariosMasCercanosPorEspeYSeccion(salaActual.getId_sala(), horaActual, a.getEspecialidad(), a.getSeccion());
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\nid horario" + horario_actual.getId_horario() + horario_actual.getEspecialidad().getNombre() + "\n\n\n\n\n\n\n\n");
         if (horario_actual == null) {
+            System.out.println("horario no encontrado");
+
             return "redirect:/"; // Redireccionar si no hay horario
         }
-        
-        LocalDate fechaHoy = LocalDate.now();
+
         Asistencia asistenciaExistence = asistenciaService.buscarAsistenciaPorFechaYHorario(fechaHoy, horario_actual);
 
         if (asistenciaExistence == null) {
@@ -106,16 +119,27 @@ public class AsistenciaController {
             asistencia.setHorario(horario_actual);
             asistenciaService.guardarAsistencia(asistencia);
             asistenciaExistence = asistencia; // Actualizar la referencia
+            System.out.println("/\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+            System.out.println("especialidad" + a.getEspecialidad().getNombre());
+            System.out.println("curso" + a.getCurso());
+            System.out.println("seccion" + a.getSeccion());
+            System.out.println("/\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
-            List<Alumno> curso = alumnoService.buscarAlumnosPorCursoSeccionEspe(a.getEspecialidad().getId_especialidad(), a.getCurso(), a.getSeccion());
+            List<Alumno> curso = alumnoService.buscarCurso(a.getEspecialidad(), a.getCurso(), a.getSeccion(), "activo");
+            if (curso == null) {
+                System.out.println("hola dos");
+                return ":redirect:/";
+            }
             for (Alumno alumno : curso) {
+                System.out.println("alumno: " + alumno.getCurso());
+                System.out.println("alumno: " + alumno.getEspecialidad().getNombre());
                 DetalleAsistencia detalle = new DetalleAsistencia();
                 detalle.setAsistencia(asistenciaExistence);
                 detalle.setAlumno(alumno);
                 detalle.setHora_presencia(null);
 
                 boolean esTarde = horario_actual.getHora_inicio().plusMinutes(20).isBefore(horaActual);
-                detalle.setEsta_presente(!esTarde);
+                detalle.setEsta_presente(false);
 
                 detalleService.guardarDetalle(detalle);
             }
@@ -128,23 +152,23 @@ public class AsistenciaController {
             d.setHora_presencia(horaActual);
             detalleService.guardarDetalle(d);
         } else {
+            System.out.println("error actualizando");
             return "redirect:/error";
         }
 
         return "redirect:/detalle-asistencias/verDetalles/" + asistenciaExistence.getId_asistencia();
     }
 
-    
     @Autowired
     private IDetalleAsistenciaService detalleAsistenciaService;
 
     @GetMapping("/verAsistencias/{idEspe}/alumnos")
     public String verAlumnosPorCursoSeccionFecha(
-                                                @PathVariable("idEspe") int idEspe,
-                                                @RequestParam("curso") String curso, 
-                                                @RequestParam("seccion") int seccion, 
-                                                @RequestParam("fecha") LocalDate fecha, 
-                                                Model model) {
+            @PathVariable("idEspe") int idEspe,
+            @RequestParam("curso") String curso,
+            @RequestParam("seccion") int seccion,
+            @RequestParam("fecha") LocalDate fecha,
+            Model model) {
         List<Alumno> alumnos = alumnoService.buscarAlumnosPorCursoYSeccionYEstado(idEspe, curso, seccion, "activo");
         Especialidad especialidadSeleccionada = especialidadService.buscarEspecialidadPorId(idEspe);
         model.addAttribute("especialidad", especialidadSeleccionada);
@@ -153,6 +177,4 @@ public class AsistenciaController {
         return "verAlumnos";
     }
 
-    
-    
 }

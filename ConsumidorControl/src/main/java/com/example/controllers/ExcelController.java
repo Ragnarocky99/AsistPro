@@ -1,5 +1,6 @@
 package com.example.controllers;
 
+import com.example.model.Asistencia;
 import com.example.model.DetalleAsistencia;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.model.Especialidad;
 import com.example.service.ExcelService;
+import com.example.service.IAsistenciaService;
 import com.example.service.IDetalleAsistenciaService;
 import com.example.service.IEspecialidadService;
 import java.io.ByteArrayOutputStream;
@@ -38,6 +40,8 @@ public class ExcelController {
     private IEspecialidadService espeService;
     @Autowired
     private ExcelService excelService;
+    @Autowired
+    private IAsistenciaService asistenciaService;
 
     @GetMapping("/subir-excel")
     public String mostrarFormularioSubida(Model model) {
@@ -65,12 +69,17 @@ public class ExcelController {
     
     @GetMapping("/exportarAsistenciasExcel/{idasis}")
     public ResponseEntity<byte[]> exportarAsistenciasExcel(@PathVariable("idasis") int idAsistencia) throws IOException {
+        Asistencia a = asistenciaService.buscarAsistenciaPorId(idAsistencia);
         // Suponiendo que 'detalles' es la lista de datos que quieres exportar
         List<DetalleAsistencia> detalles =  detalleService.buscarDetallesPorAsistencia(idAsistencia);// Obtener los detalles desde la base de datos o donde sea necesario
 
         // Crear un nuevo Workbook
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Asistencias");
+        Sheet sheet = workbook.createSheet("Asistencias " 
+                + a.getHorario().getEspecialidad().getNombre() 
+                + " " + detalles.getFirst().getAlumno().getCurso() + " curso - " +
+                a.getHorario().getSeccion() + " seccion - " +
+                a.getHorario().getMateria().getNombre());
 
         // Crear encabezado
         Row headerRow = sheet.createRow(0);
@@ -87,15 +96,16 @@ public class ExcelController {
         int rowNum = 1;
         for (DetalleAsistencia detalle : detalles) {
             Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(detalle.isEsta_presente()? "Sí" : "No");
+            row.createCell(0).setCellValue(detalle.isEsta_presente() ? "Sí" : "No");
             row.createCell(1).setCellValue(detalle.getAlumno().getNombre());
             row.createCell(2).setCellValue(detalle.getAlumno().getApellido());
             row.createCell(3).setCellValue(detalle.getAlumno().getCdi());
             row.createCell(4).setCellValue(detalle.getAlumno().getCurso());
             row.createCell(5).setCellValue(detalle.getAlumno().getSeccion());
             row.createCell(6).setCellValue(detalle.getAlumno().getEspecialidad().getNombre());
-            row.createCell(7).setCellValue(detalle.getHora_presencia().toString());
+            row.createCell(7).setCellValue(detalle.getHora_presencia() != null ? detalle.getHora_presencia().toString() : "");
         }
+
 
         // Escribir el contenido a un ByteArrayOutputStream
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
