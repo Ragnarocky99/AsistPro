@@ -59,5 +59,10 @@ public class AlumnoServiceImplement implements IAlumnoService{
     public List<Alumno> buscarCurso(Especialidad espe, String curso, int seccion, String estado) {
         return alumnoRepository.findByEspecialidadAndCursoAndSeccionAndEstado(espe, curso, seccion, estado);
     }
+
+    @Override
+    public List<Alumno> listarAlumnosActivos() {
+        return alumnoRepository.findAlumnosByEstado("activo");
+    }
     
 }

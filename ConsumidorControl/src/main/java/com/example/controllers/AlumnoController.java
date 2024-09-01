@@ -27,7 +27,7 @@ public class AlumnoController {
 
     @GetMapping("/")
     public String verAlumnos(Model model) {
-        List<Alumno> alumnos = alumnoService.listarAlumnos();
+        List<Alumno> alumnos = alumnoService.listarAlumnosActivos();
         model.addAttribute("alumnos", alumnos);
         return "verAlumnos";
     }
@@ -65,7 +65,9 @@ public class AlumnoController {
 
     @GetMapping("/eliminarAlumno/{idAlumno}")
     public String eliminarAlumno(@PathVariable("idAlumno") int id) {
-        alumnoService.eliminar(id);
+        Alumno a = alumnoService.buscarAlumnoPorID(id);
+        a.setEstado("inactivo");
+        alumnoService.guardar(a);
         return "redirect:/alumnos/";
 
     }

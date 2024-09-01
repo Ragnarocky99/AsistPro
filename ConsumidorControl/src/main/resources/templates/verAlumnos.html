@@ -30,7 +30,7 @@
                             <th>Seccion</th>
                             <th>Especialidad</th>
                             <th>CDI</th>
-                            <th>Acciones</th>
+                            <th sec:authorize="hasRole('ADMIN')">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,9 +42,9 @@
                             <td th:text="${a.seccion}">Muestra seccion</td>
                             <td th:text="${a.especialidad.nombre}">Muestra especialidad</td>
                             <td th:text="${a.cdi}"></td>
-                            <td>
+                            <td sec:authorize="hasRole('ADMIN')">
                                 <a th:href="@{/alumnos/editarAlumno/} + ${a.id_alumno}" class="btn btn-sm btn-warning">Editar</a>
-                                <a th:href="@{/alumnos/eliminarAlumno/{idAlumno} (idAlumno=${a.id_alumno}) }" class="btn btn-sm btn-danger">Eliminar</a>
+                                <a th:href="@{/alumnos/eliminarAlumno/{idAlumno} (idAlumno=${a.id_alumno}) }" class="btn btn-sm btn-danger">Dar de baja</a>
                             </td>
                         </tr>
                     </tbody>

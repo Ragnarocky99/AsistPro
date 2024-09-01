@@ -2,10 +2,8 @@ package com.example.repository;
 
 import com.example.model.Especialidad;
 import com.example.model.Horario;
-import com.example.model.Sala;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

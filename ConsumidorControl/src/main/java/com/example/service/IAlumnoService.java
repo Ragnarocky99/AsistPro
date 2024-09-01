@@ -16,6 +16,7 @@ public interface IAlumnoService {
     List<Alumno> buscarPorNombre(String nombre);
     List<Alumno> buscarAlumnosPorCursoSeccionEspe(int idespe, String curso, int seccion);
     List<Alumno> buscarCurso(Especialidad espe, String curso, int seccion, String estado);
+    List<Alumno> listarAlumnosActivos();
     
     
 }

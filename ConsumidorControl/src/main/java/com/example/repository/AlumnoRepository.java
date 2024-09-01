@@ -23,6 +23,7 @@ public interface AlumnoRepository extends JpaRepository<Alumno, Integer> {
             @Param("seccion")int seccion);
     
     List<Alumno> findByEspecialidadAndCursoAndSeccionAndEstado(Especialidad especialidad, String curso, int seccion, String estado);
+    List<Alumno> findAlumnosByEstado(String estado);
     
     
 }

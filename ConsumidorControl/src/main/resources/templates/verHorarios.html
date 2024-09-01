@@ -25,7 +25,7 @@
                         <th>Materia</th>
                         <th>Profesor</th>
                         <th>Sala</th>
-                        <th>Acciones</th>
+                        <th sec:authorize="hasRole('ADMIN')">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,7 +38,7 @@
                         <td th:text="${h.materia.nombre}">materia</td>
                         <td th:text="${h.profesor.nombre} + ' ' + ${h.profesor.apellido}">profesor</td>
                         <td th:text="${h.sala.nombre}">sala</td>
-                        <td>
+                        <td sec:authorize="hasRole('ADMIN')">
                             <a th:href="@{/horarios/editarHorario/} + ${h.id_horario}" class="btn btn-sm btn-warning">Editar</a>
                             <a th:href="@{/horarios/eliminarHorario/{idhorario}(idhorario=${h.id_horario})}" class="btn btn-sm btn-danger">Eliminar</a>
                         </td>

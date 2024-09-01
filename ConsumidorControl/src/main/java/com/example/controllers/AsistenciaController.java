@@ -162,19 +162,17 @@ public class AsistenciaController {
     @Autowired
     private IDetalleAsistenciaService detalleAsistenciaService;
 
-    @GetMapping("/verAsistencias/{idEspe}/alumnos")
-    public String verAlumnosPorCursoSeccionFecha(
-            @PathVariable("idEspe") int idEspe,
-            @RequestParam("curso") String curso,
-            @RequestParam("seccion") int seccion,
-            @RequestParam("fecha") LocalDate fecha,
-            Model model) {
-        List<Alumno> alumnos = alumnoService.buscarAlumnosPorCursoYSeccionYEstado(idEspe, curso, seccion, "activo");
-        Especialidad especialidadSeleccionada = especialidadService.buscarEspecialidadPorId(idEspe);
-        model.addAttribute("especialidad", especialidadSeleccionada);
-        model.addAttribute("alumnos", alumnos);
-
-        return "verAlumnos";
+    @GetMapping("/verAsistenciasPorCurso/{idesp}/{idal}")
+    public String verAsistenciasPorCurso(@PathVariable("idesp") int idEspe,
+                                        @PathVariable("idal") int idAlumno,
+                                        Model model) {
+        Alumno a = alumnoService.buscarAlumnoPorID(idAlumno);
+        List<Asistencia> asistenciasDelCurso = asistenciaService.buscarAsistenciasDelCurso(LocalDate.now(), idEspe, a.getCurso(), a.getSeccion());
+        if (asistenciasDelCurso.isEmpty() || asistenciasDelCurso == null) {
+            return "/";
+        }
+        model.addAttribute("asistencias", asistenciasDelCurso);
+        return "verAsistenciaCurso";
     }
 
 }
