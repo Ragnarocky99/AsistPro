@@ -169,7 +169,7 @@ public class AsistenciaController {
         Alumno a = alumnoService.buscarAlumnoPorID(idAlumno);
         List<Asistencia> asistenciasDelCurso = asistenciaService.buscarAsistenciasDelCurso(LocalDate.now(), idEspe, a.getCurso(), a.getSeccion());
         if (asistenciasDelCurso.isEmpty() || asistenciasDelCurso == null) {
-            return "/";
+            return "redirect:/";
         }
         model.addAttribute("asistencias", asistenciasDelCurso);
         return "verAsistenciaCurso";

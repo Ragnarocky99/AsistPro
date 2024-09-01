@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 @RequestMapping(value = "excel")
 public class ExcelController {
-    
+
     @Autowired
     private IDetalleAsistenciaService detalleService;
     @Autowired
@@ -59,27 +59,27 @@ public class ExcelController {
         try {
             excelService.cargarAlumnosDesdeExcel(file, idEspecialidad, curso, seccion);
             redirectAttributes.addFlashAttribute("advertencia", "Alumnos cargados exitosamente");
-            
+
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("advertencia", "Error al cargar los alumnos: " + e.getMessage());
             System.out.println("alumnos no cargados");
         }
         return "redirect:/";
     }
-    
+
     @GetMapping("/exportarAsistenciasExcel/{idasis}")
     public ResponseEntity<byte[]> exportarAsistenciasExcel(@PathVariable("idasis") int idAsistencia) throws IOException {
         Asistencia a = asistenciaService.buscarAsistenciaPorId(idAsistencia);
         // Suponiendo que 'detalles' es la lista de datos que quieres exportar
-        List<DetalleAsistencia> detalles =  detalleService.buscarDetallesPorAsistencia(idAsistencia);// Obtener los detalles desde la base de datos o donde sea necesario
+        List<DetalleAsistencia> detalles = detalleService.buscarDetallesPorAsistencia(idAsistencia);// Obtener los detalles desde la base de datos o donde sea necesario
 
         // Crear un nuevo Workbook
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Asistencias " 
-                + a.getHorario().getEspecialidad().getNombre() 
-                + " " + detalles.getFirst().getAlumno().getCurso() + " curso - " +
-                a.getHorario().getSeccion() + " seccion - " +
-                a.getHorario().getMateria().getNombre());
+        Sheet sheet = workbook.createSheet("Asistencias "
+                + a.getHorario().getEspecialidad().getNombre()
+                + " " + detalles.getFirst().getAlumno().getCurso() + " curso - "
+                + a.getHorario().getSeccion() + " seccion - "
+                + a.getHorario().getMateria().getNombre());
 
         // Crear encabezado
         Row headerRow = sheet.createRow(0);
@@ -106,7 +106,6 @@ public class ExcelController {
             row.createCell(7).setCellValue(detalle.getHora_presencia() != null ? detalle.getHora_presencia().toString() : "");
         }
 
-
         // Escribir el contenido a un ByteArrayOutputStream
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         workbook.write(baos);
@@ -121,6 +120,5 @@ public class ExcelController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(baos.toByteArray());
     }
-    
 
 }
