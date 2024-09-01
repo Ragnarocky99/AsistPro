@@ -3,8 +3,10 @@ package com.example.controllers;
 import com.example.model.Alumno;
 import com.example.model.Asistencia;
 import com.example.model.DetalleAsistencia;
+import com.example.model.DetalleAsistenciaId;
 import com.example.model.Horario;
 import com.example.model.Sala;
+import com.example.service.DetalleAsistenciaServiceImplement;
 import com.example.service.IAlumnoService;
 import com.example.service.IAsistenciaService;
 import com.example.service.IDetalleAsistenciaService;
@@ -14,7 +16,9 @@ import com.example.service.ISalaService;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping(value = "asistencias")
 public class AsistenciaController {
+    
     @Autowired
     private IAsistenciaService asistenciaService;
     @Autowired 
@@ -41,7 +46,6 @@ public class AsistenciaController {
     @Autowired
     private IDetalleAsistenciaService detalleService;
     
-    
     @GetMapping("/")
     public String verAsistencias(Model model){
         List<Asistencia> asistencias = asistenciaService.listarAsistencias();
@@ -49,8 +53,14 @@ public class AsistenciaController {
         return "verAsistencias";
     }
     
+    @GetMapping("/reporte")
+     public String verAsis(Model model){
+        List<Asistencia> asistencias = asistenciaService.listarAsistencias();
+        model.addAttribute("asistencias", asistencias);
+        return "verAsistenciaRasgos";
+    }
     
-    @GetMapping("/nuevaAsistencia")
+    @PostMapping("/nuevaAsistencia")
     public String nuevaAsistencia(Model model) {
         Asistencia asistencia = new Asistencia();
         List<Horario> horarios = horarioService.listarHorarios();
@@ -64,7 +74,7 @@ public class AsistenciaController {
         if (result.hasErrors()) {
             List<Horario> horarios = horarioService.listarHorarios();
             model.addAttribute("horarios", horarios);
-            return "formulario/formularioAsistencia";
+            return "formularios/formularioAsistencia";
         }
         asistenciaService.guardarAsistencia(asistencia);
         return "redirect:/asistencias/";
@@ -100,6 +110,7 @@ public class AsistenciaController {
         }
 
         DetalleAsistencia detalle = new DetalleAsistencia();
+        detalle.setRasgos("");
         detalle.setAsistencia(asistenciaExistence);
         detalle.setAlumno(alumno);
         detalle.setHora_presencia(horaActual);
@@ -108,9 +119,9 @@ public class AsistenciaController {
         detalle.setEsta_presente(!esTarde);
 
         detalleService.guardarDetalle(detalle);
+
         return "redirect:/detalle-asistencias/verDetalles/" + asistenciaExistence.getId_asistencia();
     }
 
-    
     
 }
