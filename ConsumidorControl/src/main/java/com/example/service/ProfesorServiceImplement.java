@@ -37,6 +37,10 @@ public class ProfesorServiceImplement implements IProfesorService{
         return profesorRepository.findByNombre(nombre);
 
     }
+    @Override
+    public Profesor buscarPorCorreo(String correo) { 
+        return profesorRepository.findByCorreo(correo);
+    }
 
     
 }

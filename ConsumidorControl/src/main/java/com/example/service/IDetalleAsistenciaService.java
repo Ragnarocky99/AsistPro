@@ -15,4 +15,7 @@ public interface IDetalleAsistenciaService {
     Optional<DetalleAsistencia> localizarDetalleporIdd(DetalleAsistenciaId id);
     void borrarrasgo(int IdAsistencia, int idAlumno);
      
+    DetalleAsistencia buscarAsistenciaDeAlumno(int idAlumno, int idAsistencia);
+    List<DetalleAsistencia> buscarDetallesPorAsistencia(int idasis);
+
 }

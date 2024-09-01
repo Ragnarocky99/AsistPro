@@ -39,7 +39,7 @@
     </script>
 </head>
 <body>
-    <header th:replace="plantilla/plantilla::encabezado"/> 
+    <header th:replace="plantilla/plantilla :: encabezado"/> 
     <div class="container mt-5">
         <h2>Subir archivo Excel</h2>
         <form method="post" th:action="@{/excel/cargarAlumnos}" enctype="multipart/form-data">
@@ -83,6 +83,6 @@
         </form>
 
     </div>
-    <footer th:replace="plantilla/plantilla::piedepagina"/>
+    <footer th:replace="plantilla/plantilla :: piedepagina"/>
 </body>
 </html>

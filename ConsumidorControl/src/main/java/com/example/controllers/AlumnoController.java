@@ -2,6 +2,7 @@ package com.example.controllers;
 
 import com.example.model.Alumno;
 import com.example.service.IAlumnoService;
+import com.example.service.IDetalleAsistenciaService;
 import com.example.service.IEspecialidadService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -26,7 +27,7 @@ public class AlumnoController {
 
     @GetMapping("/")
     public String verAlumnos(Model model) {
-        List<Alumno> alumnos = alumnoService.listarAlumnos();
+        List<Alumno> alumnos = alumnoService.listarAlumnosActivos();
         model.addAttribute("alumnos", alumnos);
         return "verAlumnos";
     }
@@ -64,9 +65,37 @@ public class AlumnoController {
 
     @GetMapping("/eliminarAlumno/{idAlumno}")
     public String eliminarAlumno(@PathVariable("idAlumno") int id) {
-        alumnoService.eliminar(id);
+        Alumno a = alumnoService.buscarAlumnoPorID(id);
+        a.setEstado("inactivo");
+        alumnoService.guardar(a);
         return "redirect:/alumnos/";
 
+    }
+    
+    @Autowired
+    private IDetalleAsistenciaService detalleAsistenciaService;
+
+    @GetMapping("/verAsistencias/{idEspe}/alumnos")
+    public String verAlumnosPorCursoSeccionFecha(
+                                                @RequestParam("curso") String curso, 
+                                                @RequestParam("seccion") String seccion, 
+                                                @RequestParam("fecha") String fecha, 
+                                                Model model) {
+
+
+        return "verAlumnos";
+    }
+    
+    @GetMapping("/desactivarCurso/{idAlumno}")
+    public String desactivarCurso(@PathVariable("idAlumno") int idalumno) {
+        Alumno a = alumnoService.buscarAlumnoPorID(idalumno);
+        
+        List<Alumno> curso = alumnoService.buscarAlumnosPorCursoYSeccionYEstado(a.getEspecialidad().getId_especialidad(), a.getCurso(), a.getSeccion(), "activo");
+        for (Alumno alumno : curso) {
+            alumno.setEstado("inactivo");
+            alumnoService.guardar(alumno);
+        }
+        return "redirect:/" ; 
     }
 
 }

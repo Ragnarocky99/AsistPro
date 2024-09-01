@@ -38,5 +38,10 @@ public class AsistenciaServiceImplement implements IAsistenciaService{
     public Asistencia buscarAsistenciaPorFechaYHorario(LocalDate fecha, Horario horario) {
         return asisRepo.findByFechaAndHorario(fecha, horario);
     }
+
+    @Override
+    public List<Asistencia> buscarAsistenciasDelCurso(LocalDate fecha, int idespecialidad, String curso, int seccion) {
+        return asisRepo.findAsistenciasByFechaEspecialidadCursoSeccion(fecha, idespecialidad, curso, seccion);
+    }
     
 }
