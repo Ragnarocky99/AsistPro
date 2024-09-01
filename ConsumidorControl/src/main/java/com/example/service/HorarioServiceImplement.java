@@ -63,11 +63,11 @@ public class HorarioServiceImplement implements IHorarioService{
     }
 
     @Override
-    public Horario buscarHorariosMasCercanosPorEspeYSeccion(int idsala, LocalTime hora, Especialidad espe, int seccion) {
+    public Horario buscarHorariosMasCercanos(int idsala, LocalTime hora) {
         Sala sala = salaRepo.findById(idsala)
                 .orElseThrow(() -> new RuntimeException("NO se encontro la sala"));
         System.out.println("sala: " + sala.getNombre());
-        return horarioRepository.findHariosDisponibles(idsala, hora, espe.getId_especialidad(), seccion);
+        return horarioRepository.findHariosDisponibles(idsala, hora);
     }
 
     
