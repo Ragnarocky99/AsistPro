@@ -7,13 +7,18 @@ import com.example.model.DetalleAsistenciaId;
 import com.example.repository.AlumnoRepository;
 import com.example.repository.AsistenciaRepository;
 import com.example.repository.DetalleAsistenciaRepository;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DetalleAsistenciaServiceImplement implements IDetalleAsistenciaService{
-    
+
+
     @Autowired
     private DetalleAsistenciaRepository detalleRepo;
     @Autowired
@@ -47,6 +52,8 @@ public class DetalleAsistenciaServiceImplement implements IDetalleAsistenciaServ
     }
 
     @Override
+    public DetalleAsistencia localizarDetallePorAlumnoYAsistencia(int idAsistencia, int idAlumno) {
+        return detalleRepo.findDetalleByAsistenciaAndAlumno(idAsistencia, idAlumno);
     public DetalleAsistencia buscarAsistenciaDeAlumno(int idalumno, int idasis) {
         return detalleRepo.findByAlumnoAndAsistencia(idalumno, idasis);
     }
@@ -58,4 +65,15 @@ public class DetalleAsistenciaServiceImplement implements IDetalleAsistenciaServ
         
     }
     
+    public Optional<DetalleAsistencia> localizarDetalleporIdd(DetalleAsistenciaId id) {
+    return detalleRepo.findById(id);
 }
+
+     @Transactional
+    public void borrarrasgo(int IdAsistencia, int idAlumno) {
+        detalleRepo.deleteRasgosByAsistenciaAndAlumno(IdAsistencia, idAlumno);
+    }
+    
+
+}
+      

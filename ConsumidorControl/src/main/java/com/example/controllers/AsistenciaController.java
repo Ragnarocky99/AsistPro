@@ -3,9 +3,11 @@ package com.example.controllers;
 import com.example.model.Alumno;
 import com.example.model.Asistencia;
 import com.example.model.DetalleAsistencia;
+import com.example.model.DetalleAsistenciaId;
 import com.example.model.Especialidad;
 import com.example.model.Horario;
 import com.example.model.Sala;
+import com.example.service.DetalleAsistenciaServiceImplement;
 import com.example.service.IAlumnoService;
 import com.example.service.IAsistenciaService;
 import com.example.service.IDetalleAsistenciaService;
@@ -16,7 +18,9 @@ import jakarta.validation.Valid;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,8 +55,15 @@ public class AsistenciaController {
         model.addAttribute("asistencias", asistencias);
         return "verAsistencias";
     }
-
-    @GetMapping("/nuevaAsistencia")
+    
+    @GetMapping("/reporte")
+     public String verAsis(Model model){
+        List<Asistencia> asistencias = asistenciaService.listarAsistencias();
+        model.addAttribute("asistencias", asistencias);
+        return "verAsistenciaRasgos";
+    }
+    
+    @PostMapping("/nuevaAsistencia")
     public String nuevaAsistencia(Model model) {
         Asistencia asistencia = new Asistencia();
         List<Horario> horarios = horarioService.listarHorarios();
@@ -66,7 +77,7 @@ public class AsistenciaController {
         if (result.hasErrors()) {
             List<Horario> horarios = horarioService.listarHorarios();
             model.addAttribute("horarios", horarios);
-            return "formulario/formularioAsistencia";
+            return "formularios/formularioAsistencia";
         }
         asistenciaService.guardarAsistencia(asistencia);
         return "redirect:/asistencias/";
@@ -156,12 +167,24 @@ public class AsistenciaController {
             return "redirect:/error";
         }
 
+        DetalleAsistencia detalle = new DetalleAsistencia();
+        detalle.setRasgos("");
+        detalle.setAsistencia(asistenciaExistence);
+        detalle.setAlumno(alumno);
+        detalle.setHora_presencia(horaActual);
         return "redirect:/detalle-asistencias/verDetalles/" + asistenciaExistence.getId_asistencia();
     }
+
 
     @Autowired
     private IDetalleAsistenciaService detalleAsistenciaService;
 
+        detalleService.guardarDetalle(detalle);
+
+        return "redirect:/detalle-asistencias/verDetalles/" + asistenciaExistence.getId_asistencia();
+    }
+
+    
     @GetMapping("/verAsistenciasPorCurso/{idesp}/{idal}")
     public String verAsistenciasPorCurso(@PathVariable("idesp") int idEspe,
                                         @PathVariable("idal") int idAlumno,
