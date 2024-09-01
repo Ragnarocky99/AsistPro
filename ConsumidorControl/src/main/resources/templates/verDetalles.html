@@ -58,7 +58,7 @@
     </style>
 </head>
 <body>
-        <header th:replace="plantilla/plantilla :: encabezado"/>
+    <header th:replace="plantilla/plantilla :: encabezado" class="header">
         <h1>Lista de Asistencias</h1>
     </header>
     <main class="container my-4">
@@ -95,7 +95,7 @@
                                 <input type="hidden" name="idAsistencia" th:value="${d.asistencia.id_asistencia}">
                                 <input type="hidden" name="idAlumno" th:value="${d.alumno.id_alumno}">
                                 <div class="d-flex align-items-center">
-                                    <select name="rasgos" aria-label="Default select example" multiple="multiple" class="form-select select2">
+                                    <select name="rasgos" aria-label="Selecciona rasgos" multiple="multiple" class="form-select select2">
                                         <option value="A5" th:selected="${d.rasgos != null and d.rasgos.contains('A5')}">Responsable</option>
                                         <option value="N8" th:selected="${d.rasgos != null and d.rasgos.contains('N8')}">No trajo el uniforme correcto</option>
                                         <option value="10" th:selected="${d.rasgos != null and d.rasgos.contains('10')}">Palaprotas</option>
@@ -103,11 +103,12 @@
                                     <button type="submit" class="btn btn-primary ms-2 btn-custom">Guardar</button>
                                 </div>
                             </form>
-                            <div class="rasgo-container mt-2">
+                            <div class="rasgo-container mt-2" th:if="${d.rasgos != null}">
                                 <div th:each="rasgo : ${d.rasgos.split(',')}" class="rasgo-item">
                                     <span th:text="${rasgo.trim()}"></span>
                                 </div>
                             </div>
+                            <div class="text-muted" th:if="${d.rasgos == null}">No hay rasgos asignados</div>
                         </td>
                     </tr>
                 </tbody>
@@ -137,23 +138,8 @@
 
         initializeSelect2();
 
-        $('#table-container').on('DOMNodeInserted DOMNodeRemoved', function() {
-            initializeSelect2();
-        });
+        // Se podría mejorar el manejo de eventos dinámicos aquí si es necesario
     });
     </script>
 </body>
 </html>
-    
-
-
-
-
-
-
-
-
-
-
-
-
