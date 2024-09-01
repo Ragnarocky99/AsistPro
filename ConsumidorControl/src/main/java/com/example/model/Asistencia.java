@@ -30,4 +30,5 @@ public class Asistencia implements Serializable {
     private LocalDate fecha;
     @OneToMany(mappedBy = "asistencia")
     private Set<DetalleAsistencia> detalleAsistencia;
+    
 }
