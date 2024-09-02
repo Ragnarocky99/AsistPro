@@ -22,5 +22,6 @@ public interface DetalleAsistenciaRepository extends JpaRepository<DetalleAsiste
 
     List<DetalleAsistencia> findDetalleAsistenciaByAsistencia(Asistencia asis);
     DetalleAsistencia findByAsistenciaAndAlumno(Asistencia a, Alumno al);
+    
 }
 
