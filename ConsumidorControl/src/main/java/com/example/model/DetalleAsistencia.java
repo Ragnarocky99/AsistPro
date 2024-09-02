@@ -19,8 +19,7 @@ import lombok.Data;
 public class DetalleAsistencia{
     
     private static final long serialVersionUID = 1L;
-
-    
+    private String rasgos = "";
     private boolean esta_presente = true;
     private LocalTime hora_presencia;
     @Id

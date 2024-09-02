@@ -8,6 +8,7 @@ import com.example.repository.AlumnoRepository;
 import com.example.repository.AsistenciaRepository;
 import com.example.repository.DetalleAsistenciaRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +57,18 @@ public class DetalleAsistenciaServiceImplement implements IDetalleAsistenciaServ
         Asistencia asis = asisRepo.findById(idasis).orElse(null);
         return detalleRepo.findDetalleAsistenciaByAsistencia(asis);
         
+    }
+
+    @Override
+    public DetalleAsistencia buscarDetalleAlumno(int idasistencia, int idalumno) {
+        Asistencia a = asisRepo.findById(idasistencia).orElse(null);
+        Alumno al = alumnoRepo.findById(idalumno).orElse(null);
+        return detalleRepo.findByAsistenciaAndAlumno(a, al);
+    }
+
+    @Override
+    public Optional<DetalleAsistencia> localizarDetalleporIdd(DetalleAsistenciaId id) {
+        return detalleRepo.findById(id);
     }
     
 }
