@@ -41,13 +41,14 @@ public class DetalleController {
             // Cargar la lista de rasgos
             List<Rasgo> rasgos = Arrays.asList(
                     new Rasgo("Llegada Tardía", "N1"),
-                    new Rasgo("Salida Temprana", "N2"),
-                    new Rasgo("Inasistencia Justificada", "N3"),
-                    new Rasgo("Inasistencia Injustificada", "N4"),
-                    new Rasgo("Participación Activa", "N5"),
-                    new Rasgo("Comportamiento Ejemplar", "N6"),
-                    new Rasgo("Retraso en Entrega de Tareas", "N7"),
-                    new Rasgo("Trabajo en Grupo Deficiente", "N8")
+                    new Rasgo("Sale del aula sin autorización", "N2"),
+                    new Rasgo("No realiza la tarea asignada en clase", "N3"),
+                    new Rasgo("No dispone de los materiales necesarios", "N4"),
+                    new Rasgo("No presenta las tareas asignadas para la casa", "N5"),
+                    new Rasgo("Utiliza vocabulario indebido en clase", "N6"),
+                    new Rasgo("Charla mucho en clase", "N7"),
+                    new Rasgo("No utiliza el uniforme establecido", "N8"),
+                    new Rasgo("Ausente en clase, presente en la Institución","N9")
             );
             model.addAttribute("rasgos", rasgos);
 

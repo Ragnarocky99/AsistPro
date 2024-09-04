@@ -42,9 +42,12 @@ public class mainController {
                              Model model) {
         List<Alumno> alumnos = alumnoService.buscarAlumnosPorCursoYSeccionYEstado(idEspe, curso, seccion, "activo");
         Especialidad especialidadSeleccionada = especialidadService.buscarEspecialidadPorId(idEspe);
-        if (!alumnos.isEmpty() && alumnos != null) model.addAttribute("alumnoCabecera", alumnos.getFirst());
-        model.addAttribute("especialidad", especialidadSeleccionada);
-        model.addAttribute("alumnos", alumnos);
+        if (!alumnos.isEmpty() && alumnos != null) {
+            model.addAttribute("alumnoCabecera", alumnos.getFirst());
+            model.addAttribute("especialidad", especialidadSeleccionada);
+            model.addAttribute("alumnos", alumnos);
+            return "especialidades/verEspecialidad";
+        }
         return "especialidades/verEspecialidad";
     }
     
