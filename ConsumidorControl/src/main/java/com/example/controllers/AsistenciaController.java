@@ -3,7 +3,6 @@ package com.example.controllers;
 import com.example.model.Alumno;
 import com.example.model.Asistencia;
 import com.example.model.DetalleAsistencia;
-import com.example.model.Especialidad;
 import com.example.model.Horario;
 import com.example.model.Sala;
 import com.example.service.IAlumnoService;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping(value = "asistencias")
@@ -77,38 +75,33 @@ public class AsistenciaController {
         LocalTime horaActual = LocalTime.now();
         LocalDate fechaHoy = LocalDate.now();
         DayOfWeek diaSemana = fechaHoy.getDayOfWeek();
+        String diaSemanaStr = obtenerDiaEnEspañol(diaSemana);
+        // Convertir a "Lunes", "Martes", etc.
+
         if (diaSemana == DayOfWeek.SATURDAY || diaSemana == DayOfWeek.SUNDAY) {
-            return "redirect:/dia-no-permitido"; // Redireccionar o manejar la situación si es sábado o domingo
-        }
-        if ((horaActual.isAfter(LocalTime.of(9, 20)) && horaActual.isBefore(LocalTime.of(9, 40)))
-                || (horaActual.isAfter(LocalTime.of(12, 0)) && horaActual.isBefore(LocalTime.of(13, 0)))) {
-            return "redirect:/horario-no-permitido"; // Redireccionar o manejar la situación
+            System.out.println("dia");
+            return "redirect:/dia-no-permitido";
         }
 
-        // Verificar si la hora actual está entre 9:20 y 9:40 o entre 12:00 y 13:00
+        // El resto del código permanece igual
         Sala salaActual = salaService.buscarPorLector(idLector);
         if (salaActual == null) {
-            System.out.println("sala no encontradad");
-            return "redirect:/error"; // Redireccionar a una página de error si la sala no se encuentra
+            System.out.println("sala");
+            return "redirect:/error";
         }
 
         Alumno a = alumnoService.buscarAlumnoPorID(idAlumno);
         if (a == null) {
-            System.out.println("alumno no encontrado");
-            return "redirect:/error"; // Redireccionar si el alumno no se encuentra
+            System.out.println("alumno");
+            return "redirect:/error";
         }
-        System.out.println("/\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        System.out.println("alumno" + a.getNombre());
-        System.out.println("alumno" + a.getEspecialidad().getNombre());
-        System.out.println("alumno" + a.getCurso());
-        System.out.println("alumno" + a.getSeccion());
 
-        Horario horario_actual = horarioService.buscarHorariosMasCercanosPorEspeYSeccion(salaActual.getId_sala(), horaActual, a.getEspecialidad(), a.getSeccion());
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\nid horario" + horario_actual.getId_horario() + horario_actual.getEspecialidad().getNombre() + "\n\n\n\n\n\n\n\n");
+        // Modificar la llamada a la búsqueda de horario para incluir el día de la semana
+        Horario horario_actual = horarioService.buscarHorarioActual(salaActual.getId_sala(), horaActual, a.getEspecialidad().getId_especialidad(), a.getCurso(), a.getSeccion(), diaSemanaStr);
+
         if (horario_actual == null) {
-            System.out.println("horario no encontrado");
-
-            return "redirect:/"; // Redireccionar si no hay horario
+            System.out.println("\n\n\n\n\n\nhorario\n\n\n\n");
+            return "redirect:/";
         }
 
         Asistencia asistenciaExistence = asistenciaService.buscarAsistenciaPorFechaYHorario(fechaHoy, horario_actual);
@@ -164,8 +157,8 @@ public class AsistenciaController {
 
     @GetMapping("/verAsistenciasPorCurso/{idesp}/{idal}")
     public String verAsistenciasPorCurso(@PathVariable("idesp") int idEspe,
-                                        @PathVariable("idal") int idAlumno,
-                                        Model model) {
+            @PathVariable("idal") int idAlumno,
+            Model model) {
         Alumno a = alumnoService.buscarAlumnoPorID(idAlumno);
         List<Asistencia> asistenciasDelCurso = asistenciaService.buscarAsistenciasDelCurso(LocalDate.now(), idEspe, a.getCurso(), a.getSeccion());
         if (asistenciasDelCurso.isEmpty() || asistenciasDelCurso == null) {
@@ -174,5 +167,19 @@ public class AsistenciaController {
         model.addAttribute("asistencias", asistenciasDelCurso);
         return "verAsistenciaCurso";
     }
+    
+    private String obtenerDiaEnEspañol(DayOfWeek diaSemana) {
+    switch (diaSemana) {
+        case MONDAY: return "LUNES";
+        case TUESDAY: return "MARTES";
+        case WEDNESDAY: return "MIÉRCOLES";
+        case THURSDAY: return "JUEVES";
+        case FRIDAY: return "VIERNES";
+        case SATURDAY: return "SÁBADO";
+        case SUNDAY: return "DOMINGO";
+        default: throw new IllegalArgumentException("Día inválido: " + diaSemana);
+    }
+}
+
 
 }
