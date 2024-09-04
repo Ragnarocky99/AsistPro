@@ -10,11 +10,18 @@ import java.time.LocalTime;
 import java.util.List;
 
 public interface IHorarioService {
+
     List<Horario> listarHorarios();
+
     void guardarHorario(Horario horario);
+
     void eliminarHorario(int id);
+
     Horario buscarHorarioPorId(int id);
+
     List<Horario> buscarHorarioPorEspeciialidad(int idespecialidad);
+
     Horario buscarPorSalaYPorHora(int sala, LocalTime hora);
-    Horario buscarHorariosMasCercanosPorEspeYSeccion(int idsala, LocalTime hora, Especialidad especialidad, int seccion);
+
+    Horario buscarHorariosMasCercanosPorEspeYSeccion(int idsala, LocalTime hora, Especialidad especialidad, int seccion, String diaSemana);
 }
