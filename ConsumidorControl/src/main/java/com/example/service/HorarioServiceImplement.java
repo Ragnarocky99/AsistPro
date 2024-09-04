@@ -75,4 +75,9 @@ public class HorarioServiceImplement implements IHorarioService {
         return horarioRepository.findHorariosDisponibles(idsala, hora, especialidad.getId_especialidad(), seccion, diaSemana);
     }
 
+    @Override
+    public Horario buscarHorarioActual(int idsala, LocalTime horaActual, int idespe, String curso, int seccion, String dia) {
+        return horarioRepository.findHorarioDisponible(idsala, horaActual, idespe, curso, seccion, dia);
+    }
+
 }

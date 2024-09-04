@@ -97,10 +97,10 @@ public class AsistenciaController {
         }
 
         // Modificar la llamada a la búsqueda de horario para incluir el día de la semana
-        Horario horario_actual = horarioService.buscarHorariosMasCercanosPorEspeYSeccion(salaActual.getId_sala(), horaActual, a.getEspecialidad(), a.getSeccion(), diaSemanaStr);
+        Horario horario_actual = horarioService.buscarHorarioActual(salaActual.getId_sala(), horaActual, a.getEspecialidad().getId_especialidad(), a.getCurso(), a.getSeccion(), diaSemanaStr);
 
         if (horario_actual == null) {
-            System.out.println("horario");
+            System.out.println("\n\n\n\n\n\nhorario\n\n\n\n");
             return "redirect:/";
         }
 

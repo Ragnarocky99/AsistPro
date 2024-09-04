@@ -19,6 +19,7 @@ public interface HorarioRepository extends JpaRepository<Horario, Integer> {
             + "WHERE h.id_sala = :id_sala "
             + "AND :horaActual BETWEEN h.hora_inicio AND h.hora_fin "
             + "AND h.id_especialidad = :especialidad "
+            + "AND h.curso = :curso "
             + "AND h.seccion = :seccion "
             + "AND h.dias LIKE %:diaSemana% "
             + "ORDER BY h.hora_inicio DESC "
@@ -26,6 +27,7 @@ public interface HorarioRepository extends JpaRepository<Horario, Integer> {
     Horario findHorarioDisponible(@Param("id_sala") int idSala,
             @Param("horaActual") LocalTime horaActual,
             @Param("especialidad") int especialidad,
+            @Param("curso") String curso,
             @Param("seccion") int seccion,
             @Param("diaSemana") String diaSemana);
 

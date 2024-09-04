@@ -24,4 +24,6 @@ public interface IHorarioService {
     Horario buscarPorSalaYPorHora(int sala, LocalTime hora);
 
     Horario buscarHorariosMasCercanosPorEspeYSeccion(int idsala, LocalTime hora, Especialidad especialidad, int seccion, String diaSemana);
+    
+    Horario buscarHorarioActual(int idsala, LocalTime horaActual, int idespe, String curso, int seccion, String dia);
 }
