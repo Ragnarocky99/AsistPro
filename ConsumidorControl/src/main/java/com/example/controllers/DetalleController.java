@@ -88,7 +88,7 @@ public class DetalleController {
                 rasgosPorAlumno.put(d.getAlumno().getId_alumno(), joinedRasgos);
 
                 // Agregar las celdas de los datos a la tabla
-                table.addCell(d.getAlumno().getNombre() + d.getAlumno().getApellido());  // Supongo que tienes un método para obtener el nombre completo
+                table.addCell(d.getAlumno().getNombre() + " " + d.getAlumno().getApellido());  // Supongo que tienes un método para obtener el nombre completo
                 table.addCell(d.isEsta_presente() ? "SI" : "NO");
                 table.addCell(d.getHora_presencia() != null ? d.getHora_presencia().toString() : "-");
                 table.addCell(joinedRasgos);
