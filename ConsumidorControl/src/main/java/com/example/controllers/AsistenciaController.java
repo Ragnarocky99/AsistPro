@@ -167,19 +167,26 @@ public class AsistenciaController {
         model.addAttribute("asistencias", asistenciasDelCurso);
         return "verAsistenciaCurso";
     }
-    
-    private String obtenerDiaEnEspañol(DayOfWeek diaSemana) {
-    switch (diaSemana) {
-        case MONDAY: return "LUNES";
-        case TUESDAY: return "MARTES";
-        case WEDNESDAY: return "MIÉRCOLES";
-        case THURSDAY: return "JUEVES";
-        case FRIDAY: return "VIERNES";
-        case SATURDAY: return "SÁBADO";
-        case SUNDAY: return "DOMINGO";
-        default: throw new IllegalArgumentException("Día inválido: " + diaSemana);
-    }
-}
 
+    private String obtenerDiaEnEspañol(DayOfWeek diaSemana) {
+        switch (diaSemana) {
+            case MONDAY:
+                return "LUNES";
+            case TUESDAY:
+                return "MARTES";
+            case WEDNESDAY:
+                return "MIÉRCOLES";
+            case THURSDAY:
+                return "JUEVES";
+            case FRIDAY:
+                return "VIERNES";
+            case SATURDAY:
+                return "SÁBADO";
+            case SUNDAY:
+                return "DOMINGO";
+            default:
+                throw new IllegalArgumentException("Día inválido: " + diaSemana);
+        }
+    }
 
 }

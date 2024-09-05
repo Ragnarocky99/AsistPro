@@ -3,6 +3,14 @@ package com.example.controllers;
 import com.example.model.DetalleAsistencia;
 import com.example.model.DetalleAsistenciaId;
 import com.example.service.IDetalleAsistenciaService;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -12,7 +20,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +41,66 @@ public class DetalleController {
 
     @Autowired
     private IDetalleAsistenciaService detalleService;
+
+    @GetMapping("/export/{idasis}")
+    public void exportDetallesPDF(@PathVariable int idasis, HttpServletResponse response) throws IOException {
+        // Establecer el tipo de contenido y los encabezados de respuesta
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=Asistencias" + idasis + ".pdf");
+
+        // Obtener los detalles de asistencia
+        List<DetalleAsistencia> detalles = detalleService.listarDetallesPorAsistencia(idasis);
+        if (detalles != null && !detalles.isEmpty()) {
+            DetalleAsistencia da = detalles.get(0);
+
+            // Crear el documento PDF
+            PdfWriter writer = new PdfWriter(response.getOutputStream());
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+
+            // Título del documento
+            document.add(new Paragraph("Reporte de Asistencias de " + da.getAsistencia().getHorario().getMateria().getNombre()));
+            document.add(new Paragraph("Fecha: " + da.getAsistencia().getFecha()));
+            document.add(new Paragraph("Especialidad:" + da.getAsistencia().getHorario().getEspecialidad().getNombre()));
+            document.add(new Paragraph("Curso: " + da.getAsistencia().getHorario().getCurso()));
+            document.add(new Paragraph("Seccion: " + da.getAsistencia().getHorario().getSeccion()));
+            document.add(new Paragraph("Hora de inicio: " + da.getAsistencia().getHorario().getHora_inicio()));
+            document.add(new Paragraph("Hora de inicio: " + da.getAsistencia().getHorario().getHora_fin()));
+
+            // Crear una tabla con las columnas correspondientes
+            float[] columnWidths = {50, 75, 75, 75}; // Ajustar las proporciones según tus necesidades
+            Table table = new Table(columnWidths);
+
+            // Agregar los encabezados de la tabla
+            table.addCell("Nombre Alumno");
+            table.addCell("Presente");
+            table.addCell("Hora llegada");
+            table.addCell("Rasgos");
+
+            // Mapa para los rasgos por alumno
+            Map<Integer, String> rasgosPorAlumno = new HashMap<>();
+
+            // Agregar los datos de los detalles de asistencia
+            for (DetalleAsistencia d : detalles) {
+                // Obtener los rasgos del alumno
+                String rasgosStr = d.getRasgos();
+                String joinedRasgos = (rasgosStr != null) ? String.join(", ", rasgosStr.split(", ")) : "";
+                rasgosPorAlumno.put(d.getAlumno().getId_alumno(), joinedRasgos);
+
+                // Agregar las celdas de los datos a la tabla
+                table.addCell(d.getAlumno().getNombre() + d.getAlumno().getApellido());  // Supongo que tienes un método para obtener el nombre completo
+                table.addCell(d.isEsta_presente() ? "SI" : "NO");
+                table.addCell(d.getHora_presencia() != null ? d.getHora_presencia().toString() : "-");
+                table.addCell(joinedRasgos);
+            }
+
+            // Añadir la tabla al documento
+            document.add(table);
+
+            // Cerrar el documento
+            document.close();
+        }
+    }
 
     @GetMapping("/verDetalles/{idAsistencia}")
     public String verDetallesPorAsistencia(@PathVariable("idAsistencia") int idAsistencia, Model model,
@@ -48,7 +121,7 @@ public class DetalleController {
                     new Rasgo("Utiliza vocabulario indebido en clase", "N6"),
                     new Rasgo("Charla mucho en clase", "N7"),
                     new Rasgo("No utiliza el uniforme establecido", "N8"),
-                    new Rasgo("Ausente en clase, presente en la Institución","N9")
+                    new Rasgo("Ausente en clase, presente en la Institución", "N9")
             );
             model.addAttribute("rasgos", rasgos);
 

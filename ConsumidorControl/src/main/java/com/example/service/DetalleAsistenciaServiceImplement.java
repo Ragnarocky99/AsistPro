@@ -7,25 +7,30 @@ import com.example.model.DetalleAsistenciaId;
 import com.example.repository.AlumnoRepository;
 import com.example.repository.AsistenciaRepository;
 import com.example.repository.DetalleAsistenciaRepository;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DetalleAsistenciaServiceImplement implements IDetalleAsistenciaService{
-    
+public class DetalleAsistenciaServiceImplement implements IDetalleAsistenciaService {
+
+    @Autowired
+    private ReportGenerator petReportGenerator;
+
     @Autowired
     private DetalleAsistenciaRepository detalleRepo;
     @Autowired
     private AlumnoRepository alumnoRepo;
     @Autowired
     private AsistenciaRepository asisRepo;
+
     @Override
     public List<DetalleAsistencia> listarDetalles() {
         return detalleRepo.findAll();
     }
-
 
     @Override
     public void guardarDetalle(DetalleAsistencia detalle) {
@@ -56,7 +61,7 @@ public class DetalleAsistenciaServiceImplement implements IDetalleAsistenciaServ
     public List<DetalleAsistencia> buscarDetallesPorAsistencia(int idasis) {
         Asistencia asis = asisRepo.findById(idasis).orElse(null);
         return detalleRepo.findDetalleAsistenciaByAsistencia(asis);
-        
+
     }
 
     @Override
@@ -70,5 +75,14 @@ public class DetalleAsistenciaServiceImplement implements IDetalleAsistenciaServ
     public Optional<DetalleAsistencia> localizarDetalleporIdd(DetalleAsistenciaId id) {
         return detalleRepo.findById(id);
     }
-    
+
+    @Override
+    public byte[] exportPdf(int idAsistencia) throws JRException, FileNotFoundException {
+        Asistencia a = asisRepo.findById(idAsistencia).orElse(null);
+        List<DetalleAsistencia> detalles = detalleRepo.findDetalleAsistenciaByAsistencia(a);
+        return petReportGenerator.exportToPdf(detalles, idAsistencia);
+    }
+
 }
+
+

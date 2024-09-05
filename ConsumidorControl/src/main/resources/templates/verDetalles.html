@@ -79,6 +79,10 @@
                 <h3 th:text="'Profesor: ' + ${detalleCabecera.asistencia.horario.profesor.nombre} + ' ' + ${detalleCabecera.asistencia.horario.profesor.apellido}"></h3>
                 <h4 th:text="'Hora inicio: ' + ${detalleCabecera.asistencia.horario.hora_inicio} + ' - Hora fin: ' + ${detalleCabecera.asistencia.horario.hora_fin}"></h4>
             </div>
+            <div class="d-flex justify-content-between mb-3">
+
+                <a th:href="@{/detalle-asistencias/export/{idAsistencia} (idAsistencia = ${detalleCabecera.asistencia.id_asistencia}) }" class="btn btn-primary">Exportar a PDF</a>
+            </div>
 
             <div th:if="${detalles != null and !detalles.empty}" class="d-flex justify-content-center">
                 <table class="table table-striped table-hover table-sm table-bordered">
@@ -121,9 +125,10 @@
                     </tbody>
                 </table>
             </div>
-                            <div class="d-flex justify-content-between mb-3">
-                    <a th:href="@{/excel/exportarAsistenciasExcel/{idasis}(idasis=${detalleCabecera.asistencia.id_asistencia})}" class="btn btn-primary">Exportar a Excel</a>
-                </div>
+
+
+
+
         </main>
         <footer th:replace="plantilla/plantilla :: piedepagina"/>
 
@@ -133,34 +138,34 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
-                        $(document).ready(function () {
-                            // Inicializar Select2
-                            $('.select2').select2({
-                                placeholder: "Selecciona uno o más rasgos",
-                                allowClear: true,
-                                width: '100%'
-                            });
+                                            $(document).ready(function () {
+                                                // Inicializar Select2
+                                                $('.select2').select2({
+                                                    placeholder: "Selecciona uno o más rasgos",
+                                                    allowClear: true,
+                                                    width: '100%'
+                                                });
 
-                            // Función para actualizar el estado del botón
-                            function updateButtonState() {
-                                // Verificar si hay rasgos seleccionados
-                                var rasgosSeleccionados = $(this).closest('tr').find('.select2').val();
-                                var horaLlegada = $(this).closest('tr').find('td:eq(4)').text().trim(); // Ajusta el índice según el orden de las columnas
+                                                // Función para actualizar el estado del botón
+                                                function updateButtonState() {
+                                                    // Verificar si hay rasgos seleccionados
+                                                    var rasgosSeleccionados = $(this).closest('tr').find('.select2').val();
+                                                    var horaLlegada = $(this).closest('tr').find('td:eq(4)').text().trim(); // Ajusta el índice según el orden de las columnas
 
-                                // Habilitar el botón solo si hay rasgos seleccionados y hay una hora de llegada
-                                $(this).closest('tr').find('#guardarRasgosBtn').prop('disabled', !(rasgosSeleccionados.length > 0 && horaLlegada !== ''));
-                            }
+                                                    // Habilitar el botón solo si hay rasgos seleccionados y hay una hora de llegada
+                                                    $(this).closest('tr').find('#guardarRasgosBtn').prop('disabled', !(rasgosSeleccionados.length > 0 && horaLlegada !== ''));
+                                                }
 
-                            // Llamar a la función al cargar la página y cada vez que cambien los rasgos
-                            $('form').on('change', '.select2', function () {
-                                updateButtonState.call(this);
-                            });
+                                                // Llamar a la función al cargar la página y cada vez que cambien los rasgos
+                                                $('form').on('change', '.select2', function () {
+                                                    updateButtonState.call(this);
+                                                });
 
-                            // Llamar a la función también al cargar la página
-                            $('form').each(function () {
-                                updateButtonState.call(this);
-                            });
-                        });
+                                                // Llamar a la función también al cargar la página
+                                                $('form').each(function () {
+                                                    updateButtonState.call(this);
+                                                });
+                                            });
         </script>
         <script>
             function printTable() {
