@@ -50,6 +50,10 @@ public class SecurityConfig {
                 .formLogin(form -> form
                 .loginPage("/login") // Define la ruta de tu página de login personalizada
                 .defaultSuccessUrl("/", true) // Redirige al usuario a la página principal después de un login exitoso
+                .successHandler(customAuthenticationSuccessHandler()) // Usa el handler de éxito
+
+                .failureHandler(customAuthenticationFailureHandler()) // Usa el handler personalizado
+
                 .permitAll()
                 )
                 .logout(config -> config.logoutSuccessUrl("/")) // Redirige al usuario a la página principal después del logout
@@ -57,6 +61,16 @@ public class SecurityConfig {
                 .accessDeniedPage("/403") // Redirige al controlador de error 403
                 )
                 .build();
+    }
+
+    @Bean
+    public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return new CustomAuthenticationSuccessHandler();
+    }
+
+    @Bean
+    public CustomAuthenticationFailureHandler customAuthenticationFailureHandler() {
+        return new CustomAuthenticationFailureHandler();
     }
 
     @Bean

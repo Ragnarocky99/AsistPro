@@ -5,10 +5,13 @@
 package com.example.controllers;
 
 import com.example.model.AppUser;
+import com.example.model.LoginAttempt;
 import com.example.model.Profesor;
 import com.example.model.RegisterDto;
 import com.example.repository.ProfesorRepository;
 import com.example.repository.AppUserRepository;
+import com.example.repository.LoginAttemptRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +30,59 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 @Controller
 public class AccountController {
+    
+    LoginAttemptRepository loginAttemptRepo;
 
     @Autowired
     private AppUserRepository repo;
     
     @Autowired
     private ProfesorRepository prof;
+    
+    @GetMapping("/login")
+    public String login() {
+        return "login"; // Nombre del archivo login.html en el directorio de templates
+    }
+    
+     @PostMapping("/login")
+    public String login(HttpServletRequest request, Model model) {
+        String email = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        // Crear intento de login
+        LoginAttempt attempt = new LoginAttempt();
+        attempt.setEmail(email);
+        attempt.setTimestamp(new Date());
+        attempt.setIpAddress(request.getRemoteAddr());
+
+        try {
+            // Verificar login
+            AppUser user = repo.findByEmail(email);
+            if (user != null && new BCryptPasswordEncoder().matches(password, user.getPassword())) {
+                // Login exitoso
+                attempt.setSuccessful(true);
+                model.addAttribute("user", user);
+                loginAttemptRepo.save(attempt);  // Guardar intento de login exitoso
+                System.out.println("Intento de login registrado exitosamente: " + attempt);
+                return "redirect:/";
+            } else {
+                // Login fallido
+                attempt.setSuccessful(false);
+                model.addAttribute("error", "Credenciales incorrectas.");
+            }
+        } catch (Exception e) {
+            // Manejar cualquier excepción
+            attempt.setSuccessful(false);
+            model.addAttribute("error", "Error durante el proceso de autenticación.");
+            System.out.println("Excepción durante el proceso de autenticación: " + e.getMessage());
+        } finally {
+            // Guardar el intento de login
+            loginAttemptRepo.save(attempt);  // Guardar intento de login fallido
+            System.out.println("Intento de login registrado: " + attempt);
+        }
+
+        return "login";
+    }
 
     @GetMapping("/register")
     public String register(Model model) {
