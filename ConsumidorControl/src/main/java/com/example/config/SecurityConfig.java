@@ -24,7 +24,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         return http
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/").permitAll()
@@ -48,15 +47,16 @@ public class SecurityConfig {
                 .requestMatchers("/excel/**").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()
                 )
+                .formLogin(form -> form
+                .loginPage("/login") // Define la ruta de tu página de login personalizada
+                .defaultSuccessUrl("/", true) // Redirige al usuario a la página principal después de un login exitoso
+                .permitAll()
+                )
+                .logout(config -> config.logoutSuccessUrl("/")) // Redirige al usuario a la página principal después del logout
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                 .accessDeniedPage("/403") // Redirige al controlador de error 403
                 )
-                .formLogin(form -> form
-                .defaultSuccessUrl("/", true) // a donde va cuando hace login
-                )
-                .logout(config -> config.logoutSuccessUrl("/")) // a donde va cuando cierra login
                 .build();
-
     }
 
     @Bean
