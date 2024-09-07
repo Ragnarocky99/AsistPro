@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class mainController {
@@ -25,6 +26,16 @@ public class mainController {
     public String home(Model model) {
         List<Especialidad> especialidades = especialidadService.listarEspecialidades();
         model.addAttribute("especialidades", especialidades);
+        model.addAttribute("especialidadesColores", Map.of(
+        1, "rgba(178,6,6,255)", 
+        2, "rgba(74,168,211,255)", 
+        3, "rgba(0,10,79,255)",  
+        4, "rgba(13,117,2,255)", 
+        5, "rgba(8,11,166,255)", 
+        6, "rgba(205,169,77,255)", 
+        7, "rgba(127,128,123,255)",
+        8, "rgba(255,255,255,255)"  
+));
         return "indice";
     }
     
