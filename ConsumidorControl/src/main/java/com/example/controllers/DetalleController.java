@@ -1,7 +1,9 @@
 package com.example.controllers;
 
+import com.example.model.Asistencia;
 import com.example.model.DetalleAsistencia;
 import com.example.model.DetalleAsistenciaId;
+import com.example.service.IAsistenciaService;
 import com.example.service.IDetalleAsistenciaService;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -41,12 +43,15 @@ public class DetalleController {
 
     @Autowired
     private IDetalleAsistenciaService detalleService;
+    @Autowired
+    private IAsistenciaService asisService;
 
     @GetMapping("/export/{idasis}")
     public void exportDetallesPDF(@PathVariable int idasis, HttpServletResponse response) throws IOException {
         // Establecer el tipo de contenido y los encabezados de respuesta
+        Asistencia a = asisService.buscarAsistenciaPorId(idasis);
         response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=Asistencias" + idasis + ".pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=Asistencias de " + a.getHorario().getEspecialidad().getNombre() + " - " + a.getFecha().toString() + ".pdf");
 
         // Obtener los detalles de asistencia
         List<DetalleAsistencia> detalles = detalleService.listarDetallesPorAsistencia(idasis);
@@ -64,8 +69,8 @@ public class DetalleController {
             document.add(new Paragraph("Especialidad:" + da.getAsistencia().getHorario().getEspecialidad().getNombre()));
             document.add(new Paragraph("Curso: " + da.getAsistencia().getHorario().getCurso()));
             document.add(new Paragraph("Seccion: " + da.getAsistencia().getHorario().getSeccion()));
-            document.add(new Paragraph("Hora de inicio: " + da.getAsistencia().getHorario().getHora_inicio()));
-            document.add(new Paragraph("Hora de inicio: " + da.getAsistencia().getHorario().getHora_fin()));
+            document.add(new Paragraph("Hora de inicio: " + da.getAsistencia().getHorario().getHora_inicio().toString()));
+            document.add(new Paragraph("Hora de inicio: " + da.getAsistencia().getHorario().getHora_fin().toString()));
 
             // Crear una tabla con las columnas correspondientes
             float[] columnWidths = {50, 75, 75, 75}; // Ajustar las proporciones según tus necesidades
