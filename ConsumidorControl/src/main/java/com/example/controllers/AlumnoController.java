@@ -44,6 +44,7 @@ public class AlumnoController {
         if (error.hasErrors()) {
             return "formularios/formularioAlumno";
         }
+        alumno.setEstado("activo");
         alumnoService.guardar(alumno);
         return "redirect:/alumnos/";
     }
