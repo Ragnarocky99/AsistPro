@@ -7,6 +7,13 @@ public class DetalleAsistenciaId implements Serializable {
     private int asistencia;
     private int alumno;
 
+    public DetalleAsistenciaId(int asistencia, int alumno) {
+        this.asistencia = asistencia;
+        this.alumno = alumno;
+    }
+    
+    
+
     // Default constructor
     public DetalleAsistenciaId() {}
 

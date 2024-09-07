@@ -40,10 +40,14 @@ public class mainController {
                              @RequestParam("curso") String curso, 
                              @RequestParam("seccion") int seccion, 
                              Model model) {
-        List<Alumno> alumnos = alumnoService.buscarAlumnosPorCursoYSeccion(idEspe, curso, seccion);
+        List<Alumno> alumnos = alumnoService.buscarAlumnosPorCursoYSeccionYEstado(idEspe, curso, seccion, "activo");
         Especialidad especialidadSeleccionada = especialidadService.buscarEspecialidadPorId(idEspe);
-        model.addAttribute("especialidad", especialidadSeleccionada);
-        model.addAttribute("alumnos", alumnos);
+        if (!alumnos.isEmpty() && alumnos != null) {
+            model.addAttribute("alumnoCabecera", alumnos.get(0));
+            model.addAttribute("especialidad", especialidadSeleccionada);
+            model.addAttribute("alumnos", alumnos);
+            return "especialidades/verEspecialidad";
+        }
         return "especialidades/verEspecialidad";
     }
     
@@ -55,5 +59,11 @@ public class mainController {
     @GetMapping("/verTablas")
     public String verTablas() {
         return "verTablas";
+    }
+    
+    @GetMapping("/verAsistenciasPorCurso/{idEspe}")
+    public String verAsistenciasCurso(){
+        
+        return "verAsistenciaCurso";
     }
 }

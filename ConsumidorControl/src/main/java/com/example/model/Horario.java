@@ -8,7 +8,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.io.Serializable;
-import java.sql.Time;
 import java.time.LocalTime;
 import lombok.Data;
 
@@ -25,17 +24,24 @@ public class Horario implements Serializable {
     private int seccion;
     private LocalTime hora_inicio;
     private LocalTime hora_fin;
+    
+    private String dias; // Días de la semana en formato "LUNES,MIERCOLES,VIERNES"
+    
     @ManyToOne
     @JoinColumn(name = "id_especialidad")
     private Especialidad especialidad;
+    
     @ManyToOne
     @JoinColumn(name = "id_sala")
     private Sala sala;
+    
     @ManyToOne
     @JoinColumn(name = "id_profesor")  
     private Profesor profesor;
+    
     @ManyToOne
     @JoinColumn(name = "id_materia")  
     private Materia materia;
-    
+
+    private String curso;
 }

@@ -12,6 +12,7 @@ import com.example.service.IEspecialidadService;
 import com.example.service.IHorarioService;
 import com.example.service.ISalaService;
 import jakarta.validation.Valid;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -28,9 +29,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping(value = "asistencias")
 public class AsistenciaController {
+
     @Autowired
     private IAsistenciaService asistenciaService;
-    @Autowired 
+    @Autowired
     private IHorarioService horarioService;
     @Autowired
     private IEspecialidadService especialidadService;
@@ -40,16 +42,14 @@ public class AsistenciaController {
     private IAlumnoService alumnoService;
     @Autowired
     private IDetalleAsistenciaService detalleService;
-    
-    
+
     @GetMapping("/")
-    public String verAsistencias(Model model){
+    public String verAsistencias(Model model) {
         List<Asistencia> asistencias = asistenciaService.listarAsistencias();
         model.addAttribute("asistencias", asistencias);
         return "verAsistencias";
     }
-    
-    
+
     @GetMapping("/nuevaAsistencia")
     public String nuevaAsistencia(Model model) {
         Asistencia asistencia = new Asistencia();
@@ -58,7 +58,7 @@ public class AsistenciaController {
         model.addAttribute("horarios", horarios);
         return "formularios/formularioAsistencia";
     }
-    
+
     @PostMapping("/guardarAsistencia")
     public String saveAsistencia(@Valid @ModelAttribute("asistencia") Asistencia asistencia, BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -69,21 +69,41 @@ public class AsistenciaController {
         asistenciaService.guardarAsistencia(asistencia);
         return "redirect:/asistencias/";
     }
-    
+
     @GetMapping("/guardarAsistenciaAutomaticamente/{idLector}/{idAlumno}")
     public String asistenciaAutomatica(@PathVariable("idLector") int idLector, @PathVariable("idAlumno") int idAlumno) {
+        LocalTime horaActual = LocalTime.now();
+        LocalDate fechaHoy = LocalDate.now();
+        DayOfWeek diaSemana = fechaHoy.getDayOfWeek();
+        String diaSemanaStr = obtenerDiaEnEspañol(diaSemana);
+        // Convertir a "Lunes", "Martes", etc.
+
+        if (diaSemana == DayOfWeek.SATURDAY || diaSemana == DayOfWeek.SUNDAY) {
+            System.out.println("dia");
+            return "redirect:/dia-no-permitido";
+        }
+
+        // El resto del código permanece igual
         Sala salaActual = salaService.buscarPorLector(idLector);
         if (salaActual == null) {
-            return "redirect:/error"; // Redireccionar a una página de error si la sala no se encuentra
+            System.out.println("sala");
+            return "redirect:/error";
         }
 
-        LocalTime horaActual = LocalTime.now();
-        Horario horario_actual = horarioService.buscarHorariosMasCercanos(salaActual.getId_sala(), horaActual);
+        Alumno a = alumnoService.buscarAlumnoPorID(idAlumno);
+        if (a == null) {
+            System.out.println("alumno");
+            return "redirect:/error";
+        }
+
+        // Modificar la llamada a la búsqueda de horario para incluir el día de la semana
+        Horario horario_actual = horarioService.buscarHorarioActual(salaActual.getId_sala(), horaActual, a.getEspecialidad().getId_especialidad(), a.getCurso(), a.getSeccion(), diaSemanaStr);
+
         if (horario_actual == null) {
-            return "redirect:/no-horario"; // Redireccionar si no hay horario
+            System.out.println("\n\n\n\n\n\nhorario\n\n\n\n");
+            return "redirect:/";
         }
 
-        LocalDate fechaHoy = LocalDate.now();
         Asistencia asistenciaExistence = asistenciaService.buscarAsistenciaPorFechaYHorario(fechaHoy, horario_actual);
 
         if (asistenciaExistence == null) {
@@ -92,25 +112,81 @@ public class AsistenciaController {
             asistencia.setHorario(horario_actual);
             asistenciaService.guardarAsistencia(asistencia);
             asistenciaExistence = asistencia; // Actualizar la referencia
+            System.out.println("/\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+            System.out.println("especialidad" + a.getEspecialidad().getNombre());
+            System.out.println("curso" + a.getCurso());
+            System.out.println("seccion" + a.getSeccion());
+            System.out.println("/\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+            List<Alumno> curso = alumnoService.buscarCurso(a.getEspecialidad(), a.getCurso(), a.getSeccion(), "activo");
+            if (curso == null) {
+                System.out.println("hola dos");
+                return ":redirect:/";
+            }
+            for (Alumno alumno : curso) {
+                System.out.println("alumno: " + alumno.getCurso());
+                System.out.println("alumno: " + alumno.getEspecialidad().getNombre());
+                DetalleAsistencia detalle = new DetalleAsistencia();
+                detalle.setAsistencia(asistenciaExistence);
+                detalle.setAlumno(alumno);
+                detalle.setHora_presencia(null);
+
+                boolean esTarde = horario_actual.getHora_inicio().plusMinutes(20).isBefore(horaActual);
+                detalle.setEsta_presente(false);
+
+                detalleService.guardarDetalle(detalle);
+            }
         }
 
-        Alumno alumno = alumnoService.buscarAlumnoPorID(idAlumno);
-        if (alumno == null) {
-            return "redirect:/error"; // Redireccionar si el alumno no se encuentra
+        int idasistencia = asistenciaExistence.getId_asistencia();
+        DetalleAsistencia d = detalleService.buscarAsistenciaDeAlumno(idAlumno, idasistencia);
+        if (d != null) {
+            d.setEsta_presente(true);
+            d.setHora_presencia(horaActual);
+            detalleService.guardarDetalle(d);
+        } else {
+            System.out.println("error actualizando");
+            return "redirect:/error";
         }
 
-        DetalleAsistencia detalle = new DetalleAsistencia();
-        detalle.setAsistencia(asistenciaExistence);
-        detalle.setAlumno(alumno);
-        detalle.setHora_presencia(horaActual);
-
-        boolean esTarde = horario_actual.getHora_inicio().plusMinutes(20).isBefore(horaActual);
-        detalle.setEsta_presente(!esTarde);
-
-        detalleService.guardarDetalle(detalle);
         return "redirect:/detalle-asistencias/verDetalles/" + asistenciaExistence.getId_asistencia();
     }
 
-    
-    
+    @Autowired
+    private IDetalleAsistenciaService detalleAsistenciaService;
+
+    @GetMapping("/verAsistenciasPorCurso/{idesp}/{idal}")
+    public String verAsistenciasPorCurso(@PathVariable("idesp") int idEspe,
+            @PathVariable("idal") int idAlumno,
+            Model model) {
+        Alumno a = alumnoService.buscarAlumnoPorID(idAlumno);
+        List<Asistencia> asistenciasDelCurso = asistenciaService.buscarAsistenciasDelCurso(LocalDate.now(), idEspe, a.getCurso(), a.getSeccion());
+        if (asistenciasDelCurso.isEmpty() || asistenciasDelCurso == null) {
+            return "redirect:/";
+        }
+        model.addAttribute("asistencias", asistenciasDelCurso);
+        return "verAsistenciaCurso";
+    }
+
+    private String obtenerDiaEnEspañol(DayOfWeek diaSemana) {
+        switch (diaSemana) {
+            case MONDAY:
+                return "LUNES";
+            case TUESDAY:
+                return "MARTES";
+            case WEDNESDAY:
+                return "MIÉRCOLES";
+            case THURSDAY:
+                return "JUEVES";
+            case FRIDAY:
+                return "VIERNES";
+            case SATURDAY:
+                return "SÁBADO";
+            case SUNDAY:
+                return "DOMINGO";
+            default:
+                throw new IllegalArgumentException("Día inválido: " + diaSemana);
+        }
+    }
+
 }

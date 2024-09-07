@@ -11,4 +11,5 @@ public interface IAsistenciaService {
     void eliminarAsistencia(int id);
     Asistencia buscarAsistenciaPorId(int id);
     Asistencia buscarAsistenciaPorFechaYHorario(LocalDate fecha, Horario horario);
+    List<Asistencia> buscarAsistenciasDelCurso(LocalDate fecha, int idespecialidad, String curso, int seccion);
 }

@@ -18,8 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class HorarioServiceImplement implements IHorarioService{
-    
+public class HorarioServiceImplement implements IHorarioService {
+
     @Autowired
     private HorarioRepository horarioRepository;
     @Autowired
@@ -52,7 +52,7 @@ public class HorarioServiceImplement implements IHorarioService{
     @Override
     public List<Horario> buscarHorarioPorEspeciialidad(int idespecialidad) {
         Especialidad especialidad = especialiadRepository.findById(idespecialidad)
-                .orElseThrow(() -> new RuntimeException("NO se encontro la especialidad") );
+                .orElseThrow(() -> new RuntimeException("NO se encontro la especialidad"));
         return horarioRepository.findByEspecialidad(especialidad);
     }
 
@@ -61,14 +61,23 @@ public class HorarioServiceImplement implements IHorarioService{
         throw new UnsupportedOperationException("Not supported yet.");
 
     }
+//
+//    @Override
+//    public Horario buscarHorariosMasCercanosPorEspeYSeccion(int idsala, LocalTime hora, Especialidad espe, int seccion) {
+//        Sala sala = salaRepo.findById(idsala)
+//                .orElseThrow(() -> new RuntimeException("NO se encontro la sala"));
+//        System.out.println("sala: " + sala.getNombre());
+//        return horarioRepository.findHariosDisponibles(idsala, hora, espe.getId_especialidad(), seccion);
+//    }
 
     @Override
-    public Horario buscarHorariosMasCercanos(int idsala, LocalTime hora) {
-        Sala sala = salaRepo.findById(idsala)
-                .orElseThrow(() -> new RuntimeException("NO se encontro la sala"));
-        System.out.println("sala: " + sala.getNombre());
-        return horarioRepository.findHariosDisponibles(idsala, hora);
+    public Horario buscarHorariosMasCercanosPorEspeYSeccion(int idsala, LocalTime hora, Especialidad especialidad, int seccion, String diaSemana) {
+        return horarioRepository.findHorariosDisponibles(idsala, hora, especialidad.getId_especialidad(), seccion, diaSemana);
     }
 
-    
+    @Override
+    public Horario buscarHorarioActual(int idsala, LocalTime horaActual, int idespe, String curso, int seccion, String dia) {
+        return horarioRepository.findHorarioDisponible(idsala, horaActual, idespe, curso, seccion, dia);
+    }
+
 }

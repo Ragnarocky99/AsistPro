@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Add Bootstrap CSS here if not included elsewhere -->
     </head>
     <body>
         <header th:fragment="encabezado">
-        
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" th:href="@{/}">S.E.E.S</a>
+                <a class="navbar-brand" th:href="@{/}">
+                    <img th:src="@{/images/ctn_logo.png}" alt="alt" width="50" height="50"/>
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/verFormularios}">Formularios</a>
+                        <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PROFESOR')">
+                            <a class="nav-link" th:href="@{/verFormularios}">Inserción de datos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/verTablas}">Vistas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/individuos/}">Individuos</a>
+                            <a class="nav-link" th:href="@{/verTablas}">Ver información</a>
                         </li>
                     </ul>
-                    <div  class="collapse navbar-collapse" id="navbarSupportedContent">
-                        
-                        <ul class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">
+
+                    <!-- Section for authenticated users -->
+                    <ul class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 User
@@ -38,14 +38,15 @@
                                 <li><a class="dropdown-item" href="/profile">Profile</a></li>
                             </ul>
                         </li>
+                        <li class="nav-item">
+                            <form method="post" action="/logout" class="d-inline ms-2">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <button type="submit" class="btn btn-danger">Logout</button>
+                            </form>
+                        </li>
                     </ul>
 
-                    <!-- Logout form for authenticated users -->
-                    <form sec:authorize="isAuthenticated()" method="post" action="/logout" class="d-inline ms-2">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                        <button type="submit" class="btn btn-danger">Logout</button>
-                    </form>
-
+                    <!-- Section for unauthenticated users -->
                     <ul class="navbar-nav ms-auto" sec:authorize="!isAuthenticated()">
                         <li class="nav-item">
                             <a href="/register" class="btn btn-outline-primary me-2">Register</a>
@@ -54,18 +55,16 @@
                             <a href="/login" class="btn btn-primary">Login</a>
                         </li>
                     </ul>
-                        
-                        
-                    </div>
-                    
                 </div>
             </nav>
         </header>
-    <footer class="footer mt-auto py-3 bg-light" th:fragment="piedepagina">
-        <div class="container">
-            <span class="text-muted">© 2024 Mi Sitio. Todos los derechos reservados.</span>
-        </div>
-    </footer>
+
+        <footer class="footer mt-auto py-3 bg-light" th:fragment="piedepagina">
+            <div class="container">
+                <span class="text-muted">© 2024 Mi Sitio. Todos los derechos reservados.</span>
+            </div>
+        </footer>
+        
+        <!-- Add Bootstrap JS and dependencies here if not included elsewhere -->
     </body>
 </html>
- 
