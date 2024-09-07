@@ -78,10 +78,10 @@ public class AsistenciaController {
         String diaSemanaStr = obtenerDiaEnEspañol(diaSemana);
         // Convertir a "Lunes", "Martes", etc.
 
-        if (diaSemana == DayOfWeek.SATURDAY || diaSemana == DayOfWeek.SUNDAY) {
-            System.out.println("dia");
-            return "redirect:/dia-no-permitido";
-        }
+//        if (diaSemana == DayOfWeek.SATURDAY || diaSemana == DayOfWeek.SUNDAY) {
+//            System.out.println("dia");
+//            return "redirect:/dia-no-permitido";
+//        }
 
         // El resto del código permanece igual
         Sala salaActual = salaService.buscarPorLector(idLector);
