@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .requestMatchers("/images/**").permitAll()
                 .requestMatchers("/verEspecialidad/**").permitAll()
                 .requestMatchers("/excel/**").hasAnyRole("ADMIN")
+                .requestMatchers("/asistencias/guardarAsistenciaAutomaticamente").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
