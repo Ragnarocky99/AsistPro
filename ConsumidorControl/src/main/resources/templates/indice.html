@@ -3,38 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Inicio App</title>
+    <title>Inicio</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         .card {
-            width: 100%;
-            height: 100%; /* Hacer que las tarjetas ocupen todo el contenedor */
+            position: relative; /* Necesario para posicionar el pseudo-elemento */
+            overflow: hidden; /* Oculta el contenido desbordante, como el fondo de color */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición para el efecto de aumento de tamaño y sombra */
         }
+
         .card-img-top {
-            width: 80%; /* Ajustar el tamaño de la imagen */
+            width: 100%; /* Ajustar al 100% del contenedor de la tarjeta */
             height: auto; /* Mantener la proporción de la imagen */
-            object-fit: cover;
-            margin-top: 10px; /* Agregar margen superior si es necesario */
+            object-fit: cover; /* Ajustar la imagen para cubrir el área */
+            transition: filter 0.3s ease; /* Transición para efectos de filtro */
+            z-index: 2; /* Asegurarse de que la imagen esté por encima del pseudo-elemento */
         }
-        .col {
-            display: flex;
-            justify-content: center; /* Centrar el contenido horizontalmente */
-            align-items: center; /* Centrar el contenido verticalmente */
+
+        .card:hover {
+            transform: scale(1.05); /* Aumentar el tamaño de la tarjeta al pasar el ratón */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Añadir sombra al pasar el ratón */
         }
-        .card {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+
+        .card:hover::before {
+            content: ''; /* Contenido vacío para el pseudo-elemento */
+            position: absolute; /* Posicionar absolutamente dentro del contenedor */
+            top: 0; /* Alinear al borde superior */
+            left: 0; /* Alinear al borde izquierdo */
+            width: 100%; /* Ancho completo del contenedor */
+            height: 100%; /* Alto completo del contenedor */
+            background-color: var(--card-color, rgba(0, 0, 0, 0.7)); /* Fondo más oscuro con color definido en línea */
+            z-index: 1; /* Asegurarse de que esté encima de la imagen */
+            opacity: 0.8; /* Aumentar la opacidad para hacer el color de fondo más oscuro */
+            transition: background-color 0.3s ease; /* Transición para el color de fondo */
+        }
+
+        .card-body {
             padding: 10px; /* Ajustar el padding */
-            border: 1px solid #ddd; /* Borde opcional */
+            position: relative; /* Necesario para asegurar el orden del contenido */
+            z-index: 3; /* Asegurarse de que el contenido esté encima del pseudo-elemento */
+        }
+
+        /* Estilos adicionales para el h1 */
+        h1 {
+            text-align: center; /* Centrar el texto */
+            font-size: 3rem; /* Hacer el texto más grande */
+            margin-top: 2rem; /* Espacio arriba del título */
+            margin-bottom: 2rem; /* Espacio abajo del título */
+            color: #343a40; /* Color del texto, puede ser ajustado según tus necesidades */
+        }
+
+        /* Estilos adicionales para el h2 */
+        h2 {
+            text-align: center; /* Centrar el texto */
+            color: #6c757d; /* Color del texto, puede ser ajustado según tus necesidades */
+        }
+
+        /* Estilos para el footer */
+        footer {
+            background-color: #f8f9fa; /* Color de fondo del pie de página */
+            padding: 1rem; /* Espacio interior */
+            text-align: center; /* Centrar el texto */
+            border-top: 1px solid #dee2e6; /* Borde superior */
+            margin-top: 2rem; /* Espacio arriba del pie de página */
         }
     </style>
 </head>
-<body>
+<body class="container">
     <!-- Navigation Bar -->
-    <header th:replace="plantilla/plantilla :: encabezado"/>
+    <header th:replace="plantilla/plantilla :: encabezado"></header>
     
     <!-- Main Content -->
     <main class="container">
@@ -46,7 +84,8 @@
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4" th:if="${especialidades != null and !especialidades.empty}">
                 <div th:each="especialidad : ${especialidades}" class="col">
                     <a th:href="@{/verEspecialidad/{idEspe}(idEspe=${especialidad.id_especialidad})}" class="text-decoration-none">
-                        <div class="card text-center">
+                        <div class="card text-center"
+                             th:style="'--card-color: ' + ${especialidadesColores[especialidad.id_especialidad]}">
                             <img th:src="@{'/images/esp' + ${especialidad.id_especialidad} + '.png'}" class="card-img-top" alt="Especialidad Logo">
                             <div class="card-body">
                                 <p class="card-text" th:text="${especialidad.nombre}"></p>
@@ -63,10 +102,17 @@
     </main>
     
     <!-- Footer -->
-    <footer th:replace="plantilla/plantilla :: piedepagina"/>
+    <footer th:replace="plantilla/plantilla :: piedepagina"></footer>
 
     <!-- Bootstrap JS, Popper.js, and jQuery -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>
 </html>
+
+
+
+
+
+
+

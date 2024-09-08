@@ -1,27 +1,106 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>Formularios</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<head>
+    <title>Formularios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
 
-    </head>
-    <body>
-        <header th:replace="plantilla/plantilla :: encabezado"/>  
-        <main class="container">
-            <h1>Formularios</h1>
-            <ul class="list-group">
-                <li class="list-group-item"><a th:href="@{/alumnos/nuevoAlumno}">Formulario Alumno</a></li>
-                <li class="list-group-item"><a th:href="@{/individuos/nuevoIndividuo}">Formulario Individuo</a></li>
-                <li class="list-group-item"><a th:href="@{/horarios/nuevoHorario}">Formulario Horario</a></li>
-                <li class="list-group-item"><a th:href="@{/profesores/nuevoProfesor}">Formulario Profesor</a></li>
-                <li class="list-group-item"><a th:href="@{/excel/subir-excel}">Formulario alumnado excel</a></li>
-            </ul>
+        h1 {
+            margin-top: 1rem; /* Más arriba */
+            margin-bottom: 2rem; /* Separar de los cuadros */
+            text-align: center;
+        }
 
-        </main>
-        
-            <footer th:replace="plantilla/plantilla :: piedepagina"/>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>        
-    </body>
+        .btn-custom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 300px; /* Tamaño del cuadrado */
+            height: 300px; /* Tamaño del cuadrado */
+            padding: 1rem;
+            margin: 1rem; /* Espaciado entre los cuadros */
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+            background-color: white;
+            color: black;
+            text-decoration: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-custom img {
+            width: 180px; /* Tamaño de la imagen */
+            height: 180px; /* Tamaño de la imagen */
+            object-fit: cover;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-custom:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        footer {
+            background-color: #f8f9fa;
+            padding: 0.5rem; /* Reducido el tamaño del footer */
+            text-align: center;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body class="container">
+    <header th:replace="plantilla/plantilla :: encabezado"></header>
+    
+    <main class="container">
+        <h1 class="mb-4">Formularios</h1>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 justify-content-center">
+            <div class="col d-flex justify-content-center">
+                <a th:href="@{/alumnos/nuevoAlumno}" class="btn-custom">
+                    <img src="/images/estudiante.png" alt="Formulario Alumno">
+                    Formulario Alumno
+                </a>
+            </div>
+            <div class="col d-flex justify-content-center">
+                <a th:href="@{/horarios/nuevoHorario}" class="btn-custom">
+                    <img src="/images/horarionuevo.png" alt="Formulario Horario">
+                    Formulario Horario
+                </a>
+            </div>
+            <div class="col d-flex justify-content-center">
+                <a th:href="@{/profesores/nuevoProfesor}" class="btn-custom">
+                    <img src="/images/profe.png" alt="Formulario Profesor">
+                    Formulario Profesor
+                </a>
+            </div>
+            <div class="col d-flex justify-content-center">
+                <a th:href="@{/excel/subir-excel}" class="btn-custom">
+                    <img src="/images/excel.png" alt="Formulario alumnado excel">
+                    Formulario Alumnado Excel
+                </a>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer bg-light">
+        <div class="container">
+            <span class="text-muted">© 2024 Mi Sitio. Todos los derechos reservados.</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
 </html>
+
+
+
+
+
