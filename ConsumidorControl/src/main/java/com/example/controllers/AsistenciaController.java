@@ -87,13 +87,13 @@ public class AsistenciaController {
         Sala salaActual = salaService.buscarPorLector(idLector);
         if (salaActual == null) {
             System.out.println("sala");
-            return "redirect:/error";
+            return "redirect:/sala-no-encontrada";
         }
 
         Alumno a = alumnoService.buscarAlumnoPorID(idAlumno);
         if (a == null) {
             System.out.println("alumno");
-            return "redirect:/error";
+            return "redirect:/alumno-no-encontrado";
         }
 
         // Modificar la llamada a la búsqueda de horario para incluir el día de la semana
@@ -101,7 +101,7 @@ public class AsistenciaController {
 
         if (horario_actual == null) {
             System.out.println("\n\n\n\n\n\nhorario\n\n\n\n");
-            return "redirect:/";
+            return "redirect:/horario-no-encontrado";
         }
 
         Asistencia asistenciaExistence = asistenciaService.buscarAsistenciaPorFechaYHorario(fechaHoy, horario_actual);
@@ -121,7 +121,7 @@ public class AsistenciaController {
             List<Alumno> curso = alumnoService.buscarCurso(a.getEspecialidad(), a.getCurso(), a.getSeccion(), "activo");
             if (curso == null) {
                 System.out.println("hola dos");
-                return ":redirect:/";
+                return ":redirect:/curso-no-encontrado";
             }
             for (Alumno alumno : curso) {
                 System.out.println("alumno: " + alumno.getCurso());
@@ -146,7 +146,7 @@ public class AsistenciaController {
             detalleService.guardarDetalle(d);
         } else {
             System.out.println("error actualizando");
-            return "redirect:/error";
+            return "redirect:/error-actualizando";
         }
 
         return "redirect:/detalle-asistencias/verDetalles/" + asistenciaExistence.getId_asistencia();
@@ -171,19 +171,20 @@ public class AsistenciaController {
     private String obtenerDiaEnEspañol(DayOfWeek diaSemana) {
         switch (diaSemana) {
             case MONDAY:
-                return "LUNES";
+                return "Lunes";
             case TUESDAY:
-                return "MARTES";
+                return "Martes";
             case WEDNESDAY:
-                return "MIÉRCOLES";
+                return "Miércoles";
             case THURSDAY:
-                return "JUEVES";
+                return "Jueves";
             case FRIDAY:
-                return "VIERNES";
+                return "Viernes";
             case SATURDAY:
-                return "SÁBADO";
+                return "Sábado";
+                
             case SUNDAY:
-                return "DOMINGO";
+                return "Domingo";
             default:
                 throw new IllegalArgumentException("Día inválido: " + diaSemana);
         }

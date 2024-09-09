@@ -81,7 +81,7 @@ public class HorarioController {
             model.addAttribute("materias", materias);
             return "formularios/formularioHorario";
         }
-
+        
         horarioService.guardarHorario(horario);
         return "redirect:/horarios/";
     }

@@ -31,6 +31,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         loginAttemptRepository.save(loginAttempt);
 
         // Redirige al usuario al éxito de login
-        response.sendRedirect("/");
+        String contextPath = request.getContextPath();
+        response.sendRedirect(contextPath + "/home");
     }
 }

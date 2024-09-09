@@ -64,7 +64,7 @@ public class AccountController {
                 model.addAttribute("user", user);
                 loginAttemptRepo.save(attempt);  // Guardar intento de login exitoso
                 System.out.println("Intento de login registrado exitosamente: " + attempt);
-                return "redirect:/";
+                return "redirect:/home";
             } else {
                 // Login fallido
                 attempt.setSuccessful(false);

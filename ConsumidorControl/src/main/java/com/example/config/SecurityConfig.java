@@ -27,6 +27,7 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/").permitAll()
+                .requestMatchers("/home").permitAll()
                 .requestMatchers("/verFormularios/**").hasAnyRole("ADMIN", "PROFESOR")
                 .requestMatchers("/verTablas/**").permitAll()
                 .requestMatchers("/individuos").hasRole("ADMIN")
@@ -39,25 +40,26 @@ public class SecurityConfig {
                 .requestMatchers("/profesores/buscarPorNombre").permitAll()
                 .requestMatchers("/profesores/editarProfesor/**").hasRole("ADMIN")
                 .requestMatchers("/profesores/eliminarProfesor/**").hasRole("ADMIN")
-                .requestMatchers("/asistencias/").permitAll()
+                .requestMatchers("/asistencias/**").permitAll()
                 .requestMatchers("/register").permitAll()
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/images/**").permitAll()
                 .requestMatchers("/verEspecialidad/**").permitAll()
                 .requestMatchers("/excel/**").hasAnyRole("ADMIN")
-                .requestMatchers("/asistencias/guardarAsistenciaAutomaticamente").hasAnyRole("ADMIN")
+                .requestMatchers("/asistencias/guardarAsistenciaAutomaticamente").permitAll()
+                .requestMatchers("/asistencias/guardarAsistenciaAutomaticamente/**").permitAll()
                 .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                 .loginPage("/login") // Define la ruta de tu página de login personalizada
-                .defaultSuccessUrl("/", true) // Redirige al usuario a la página principal después de un login exitoso
+                .defaultSuccessUrl("/home", true) // Redirige al usuario a la página principal después de un login exitoso
                 .successHandler(customAuthenticationSuccessHandler()) // Usa el handler de éxito
 
                 .failureHandler(customAuthenticationFailureHandler()) // Usa el handler personalizado
 
                 .permitAll()
                 )
-                .logout(config -> config.logoutSuccessUrl("/")) // Redirige al usuario a la página principal después del logout
+                .logout(config -> config.logoutSuccessUrl("/home")) // Redirige al usuario a la página principal después del logout
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                 .accessDeniedPage("/403") // Redirige al controlador de error 403
                 )

@@ -23,8 +23,13 @@ public class mainController {
 
     @Autowired
     private IAlumnoService alumnoService;
-
+    
     @GetMapping("/")
+    public String redirectHome(){
+        return "redirect:/home";
+    }
+    
+    @GetMapping("/home")
     public String home(Model model) {
         List<Especialidad> especialidades = especialidadService.listarEspecialidades();
         model.addAttribute("especialidades", especialidades);

@@ -74,9 +74,9 @@
                         <label for="curso" class="form-label">Curso:</label>
                         <select id="curso" th:field="*{curso}" class="form-select" required>
                             <option value="" disabled selected>Seleccionar Curso</option>
-                            <option value="PRIMERO">PRIMERO</option>
-                            <option value="SEGUNDO">SEGUNDO</option>
-                            <option value="TERCERO">TERCERO</option>
+                            <option value="Primero">PRIMERO</option>
+                            <option value="Segundo">SEGUNDO</option>
+                            <option value="Tercero">TERCERO</option>
                         </select>
                     </div>
 
@@ -104,7 +104,7 @@
 
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary">Guardar</button>
-                        <a th:href="@{/}" class="btn btn-secondary">Cancelar</a>
+                        <a th:href="@{/home}" class="btn btn-secondary">Cancelar</a>
                     </div>
                 </form>
             </div>

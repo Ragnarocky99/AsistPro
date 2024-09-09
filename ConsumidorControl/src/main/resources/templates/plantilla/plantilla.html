@@ -2,72 +2,73 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       xmlns="http://www.w3.org/1999/xhtml">
-    
+
     <head>
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Add Bootstrap CSS here if not included elsewhere -->
-        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
-    </head>
-    <body class="container">
-        <header th:fragment="encabezado">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" th:href="@{/}">
-                    <img th:src="@{/images/ctn_logo.png}" alt="alt" width="50" height="50"/>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PROFESOR')">
-                            <a class="nav-link" th:href="@{/verFormularios}">Inserción de datos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/verTablas}">Ver información</a>
-                        </li>
-                    </ul>
-
-                    <!-- Section for authenticated users -->
-                    <ul class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                Usuario
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <!-- Add Bootstrap CSS here if not included elsewhere -->
+                <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+                </head>
+                <body class="container">
+                    <header th:fragment="encabezado">
+                        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                            <a class="navbar-brand" th:href="@{/}">
+                                <img th:src="@{/images/ctn_logo.png}" alt="alt" width="50" height="50"/>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="/profile">Perfil</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <form method="post" action="/logout" class="d-inline ms-2">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                                <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
-                            </form>
-                        </li>
-                    </ul>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
 
-                    <!-- Section for unauthenticated users -->
-                    <ul class="navbar-nav ms-auto" sec:authorize="!isAuthenticated()">
-                        <li class="nav-item">
-                            <a href="/register" class="btn btn-outline-primary me-2">Registrarse</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/login" class="btn btn-primary">Iniciar Sesión</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </header>
+                            <div class="collapse navbar-collapse" id="navbarNav">
+                                <ul class="navbar-nav me-auto">
+                                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_PROFESOR')">
+                                        <a class="nav-link" th:href="@{/verFormularios}">Inserción de datos</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" th:href="@{/verTablas}">Ver información</a>
+                                    </li>
+                                </ul>
 
-        <footer class="footer mt-auto py-3 bg-light" th:fragment="piedepagina">
-            <div class="container">
-                <span class="text-muted">© 2024 Mi Sitio. Todos los derechos reservados.</span>
-            </div>
-        </footer>
-        
-        <!-- Add Bootstrap JS and dependencies here if not included elsewhere -->
-        
-    </body>
-</html>
+                                <!-- Section for authenticated users -->
+                                <ul class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                            Usuario
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" href="/profile">Perfil</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <form th:action="@{/logout}" method="post" class="d-inline ms-2">
+                                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                            <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
+                                        </form>
+
+                                    </li>
+                                </ul>
+
+                                <!-- Section for unauthenticated users -->
+                                <ul class="navbar-nav ms-auto" sec:authorize="!isAuthenticated()">
+                                    <li class="nav-item">
+                                        <a th:href="@{/register}" class="btn btn-outline-primary me-2">Registrarse</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a th:href="@{/login}" class="btn btn-primary">Iniciar Sesión</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </header>
+
+                    <footer class="footer mt-auto py-3 bg-light" th:fragment="piedepagina">
+                        <div class="container">
+                            <span class="text-muted">© 2024 Mi Sitio. Todos los derechos reservados.</span>
+                        </div>
+                    </footer>
+
+                    <!-- Add Bootstrap JS and dependencies here if not included elsewhere -->
+
+                </body>
+                </html>
