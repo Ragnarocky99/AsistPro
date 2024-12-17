@@ -8,7 +8,6 @@ import com.example.model.Sala;
 import com.example.service.IAlumnoService;
 import com.example.service.IAsistenciaService;
 import com.example.service.IDetalleAsistenciaService;
-import com.example.service.IEspecialidadService;
 import com.example.service.IHorarioService;
 import com.example.service.ISalaService;
 import jakarta.validation.Valid;
@@ -35,14 +34,13 @@ public class AsistenciaController {
     @Autowired
     private IHorarioService horarioService;
     @Autowired
-    private IEspecialidadService especialidadService;
-    @Autowired
     private ISalaService salaService;
     @Autowired
     private IAlumnoService alumnoService;
     @Autowired
     private IDetalleAsistenciaService detalleService;
 
+    //
     @GetMapping("/")
     public String verAsistencias(Model model) {
         List<Asistencia> asistencias = asistenciaService.listarAsistencias();
@@ -60,7 +58,8 @@ public class AsistenciaController {
     }
 
     @PostMapping("/guardarAsistencia")
-    public String saveAsistencia(@Valid @ModelAttribute("asistencia") Asistencia asistencia, BindingResult result, Model model) {
+    public String saveAsistencia(@Valid @ModelAttribute("asistencia") Asistencia asistencia, BindingResult result,
+            Model model) {
         if (result.hasErrors()) {
             List<Horario> horarios = horarioService.listarHorarios();
             model.addAttribute("horarios", horarios);
@@ -78,10 +77,10 @@ public class AsistenciaController {
         String diaSemanaStr = obtenerDiaEnEspañol(diaSemana);
         // Convertir a "Lunes", "Martes", etc.
 
-//        if (diaSemana == DayOfWeek.SATURDAY || diaSemana == DayOfWeek.SUNDAY) {
-//            System.out.println("dia");
-//            return "redirect:/dia-no-permitido";
-//        }
+        // if (diaSemana == DayOfWeek.SATURDAY || diaSemana == DayOfWeek.SUNDAY) {
+        // System.out.println("dia");
+        // return "redirect:/dia-no-permitido";
+        // }
 
         // El resto del código permanece igual
         Sala salaActual = salaService.buscarPorLector(idLector);
@@ -96,8 +95,10 @@ public class AsistenciaController {
             return "redirect:/alumno-no-encontrado";
         }
 
-        // Modificar la llamada a la búsqueda de horario para incluir el día de la semana
-        Horario horario_actual = horarioService.buscarHorarioActual(salaActual.getId_sala(), horaActual, a.getEspecialidad().getId_especialidad(), a.getCurso(), a.getSeccion(), diaSemanaStr);
+        // Modificar la llamada a la búsqueda de horario para incluir el día de la
+        // semana
+        Horario horario_actual = horarioService.buscarHorarioActual(salaActual.getId_sala(), horaActual,
+                a.getEspecialidad().getId_especialidad(), a.getCurso(), a.getSeccion(), diaSemanaStr);
 
         if (horario_actual == null) {
             System.out.println("\n\n\n\n\n\nhorario\n\n\n\n");
@@ -131,7 +132,6 @@ public class AsistenciaController {
                 detalle.setAlumno(alumno);
                 detalle.setHora_presencia(null);
 
-                boolean esTarde = horario_actual.getHora_inicio().plusMinutes(20).isBefore(horaActual);
                 detalle.setEsta_presente(false);
 
                 detalleService.guardarDetalle(detalle);
@@ -152,15 +152,14 @@ public class AsistenciaController {
         return "redirect:/detalle-asistencias/verDetalles/" + asistenciaExistence.getId_asistencia();
     }
 
-    @Autowired
-    private IDetalleAsistenciaService detalleAsistenciaService;
 
     @GetMapping("/verAsistenciasPorCurso/{idesp}/{idal}")
     public String verAsistenciasPorCurso(@PathVariable("idesp") int idEspe,
             @PathVariable("idal") int idAlumno,
             Model model) {
         Alumno a = alumnoService.buscarAlumnoPorID(idAlumno);
-        List<Asistencia> asistenciasDelCurso = asistenciaService.buscarAsistenciasDelCurso(LocalDate.now(), idEspe, a.getCurso(), a.getSeccion());
+        List<Asistencia> asistenciasDelCurso = asistenciaService.buscarAsistenciasDelCurso(LocalDate.now(), idEspe,
+                a.getCurso(), a.getSeccion());
         if (asistenciasDelCurso.isEmpty() || asistenciasDelCurso == null) {
             return "redirect:/";
         }
@@ -182,7 +181,6 @@ public class AsistenciaController {
                 return "Viernes";
             case SATURDAY:
                 return "Sábado";
-                
             case SUNDAY:
                 return "Domingo";
             default:
